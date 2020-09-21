@@ -5,27 +5,27 @@
 | 21.09.2020 | 1.0 | Educational Control System | TeamOne |
 
 ## Contents
-1. [Introduction](#1-introduction)
-1.1 [Target](#11-target)
-1.2 [Context](#12-context)
-1.3 [List of abbreviations and definitions](#13-list-of-abbreviations-and-definitions)
-2. [Short product overview](#2-short-product-overview)
-3. [Characteristics of the business processes](#3-characteristics-of-the-business-processes)
-3.1 [System purpose](#31-system-purpose)
-3.2 [Practicality](#32-practicality)
-3.3 [Interaction with users](#33-interaction-with-users)
-3.4 [The business process characteristics](#34-the-business-process-characteristics)
-4. [Functionality](#4-functionality)
-4.1 [Unauthorized user feature description](#41-unauthorized-feature-description)
-4.2 [Student user feature description](#42-description-of-student-opportunities)
-4.3 [Leader of the group user feature description](#43-leader-of-the-group-user-feature-description)
-4.4 [Teacher user feature description](#44-teacher-user-feature-description)
-4.5 [Administrator user feature description](#45-administrator-user-feature-description)
-5. [Availability](#5-availability)
-5.1 [Localization](#51-localization)
-5.2 [Platforms](#52-platforms)
-6. [Fault Tolerance (Reliability)](#6-fault-tolerance-(reliability))
-7. [Security](#7-security)
+1. [Introduction](#1-introduction)  
+1.1 [Target](#11-target)  
+1.2 [Context](#12-context)  
+1.3 [List of abbreviations and definitions](#13-list-of-abbreviations-and-definitions)  
+2. [Short product overview](#2-short-product-overview)  
+3. [Characteristics of the business processes](#3-characteristics-of-the-business-processes)  
+3.1 [System purpose](#31-system-purpose)  
+3.2 [Practicality](#32-practicality)  
+3.3 [Interaction with users](#33-interaction-with-users)  
+3.4 [The business process characteristics](#34-the-business-process-characteristics)  
+4. [Functionality](#4-functionality)  
+4.1 [Unauthorized user feature description](#41-unauthorized-feature-description)  
+4.2 [Student user feature description](#42-description-of-student-opportunities)  
+4.3 [Leader of the group user feature description](#43-leader-of-the-group-user-feature-description)  
+4.4 [Teacher user feature description](#44-teacher-user-feature-description)  
+4.5 [Administrator user feature description](#45-administrator-user-feature-description)  
+5. [Availability](#5-availability)  
+5.1 [Localization](#51-localization)  
+5.2 [Platforms](#52-platforms)  
+6. [Fault Tolerance (Reliability)](#6-fault-tolerance-(reliability))  
+7. [Security](#7-security)  
 ## 1. Introduction
 The document contains descriptive information about the requests of people interested in this service. Stakeholders are primarily users and administrators; they can be students, teachers and other people who want to use the service.
 ### 1.1 Purpose
@@ -63,7 +63,7 @@ Available features:
 * view group schedules
 * view the schedule of teachers
 * view homework
-* own attendance
+* view own attendance
 
 ### 4.3 Leader of the group user feature description
 The leader of the group user is a representative of the students of the group, who is elected by the majority of students of the academic group by direct vote. The capabilities of the elder's account provide a relationship between the students of the group and the teacher.
