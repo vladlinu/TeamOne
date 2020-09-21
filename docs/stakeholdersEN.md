@@ -14,7 +14,7 @@
 3.1 [System purpose](#31-system-purpose)
 3.2 [Practicality](#32-practicality)
 3.3 [Interaction with users](#33-interaction-with-users)
-3.4 [Business process characteristics](#34-business process-characteristics)
+3.4 [The business process characteristics](#34-the-business-process-characteristics)
 4. [Functionality](#4-functionality)
 4.1 [Unauthorized user feature description](#41-unauthorized-feature-description)
 4.2 [Student user feature description](#42-description-of-student-opportunities)
@@ -45,7 +45,7 @@ The concept of the scheduling system, for both students and teachers, provides a
 However, there are many options for integrating this system into other software products, from telegrams to the official website of the university.
 ### 3.3 Interaction with users
 In general, user interaction depends on the application of the API. Yes, if necessary, it will be done via email.
-### 3.4 Characteristics of the business process
+### 3.4 The business process characteristics
 The system will be managed with the help of administrator accounting tools (their exclusive functions), that is with the help of a special administration team and system operators.
 ## 4. Functionality
 There are several modes of using the service. This creates a hierarchical approach to the interaction between different types of users and elements of the service system. Each of the user models has different functions and separate concepts of interaction with the service, which improves the work for all stakeholders.
