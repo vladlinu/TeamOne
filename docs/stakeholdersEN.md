@@ -1,16 +1,16 @@
 # Education Control System
 ## List of changes
-| Date Version | Description Author |
+| Date | Version | Description | Author |
 | ------------ | ------------- | ------------ | ------------- |
-| 21.09.2020 | 1.0 | Educational Control System TeamOne |
+| 21.09.2020 | 1.0 | Educational Control System | TeamOne |
 
 ## Contents
 1. [Introduction](#1-introduction)
 1.1 [Target](#11-target)
 1.2 [Context](#12-context)
 1.3 [List of abbreviations and definitions](#13-list-of-abbreviations-and-definitions)
-2. [Short product overview] (#2-short-product-overview)
-3. [Characteristics of business processes] (#3-characteristics-of-business-processes)
+2. [Short product overview](#2-short-product-overview)
+3. [Characteristics of business processes](#3-characteristics-of-business-processes)
 3.1 [System purpose](#31-system-purpose)
 3.2 [Practicality](#32-practicality)
 3.3 [Interaction with users](#33-interaction-with-users)
