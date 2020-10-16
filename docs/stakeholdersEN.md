@@ -54,7 +54,9 @@ This type of user is designed to quickly view the schedule if you do not need to
 
 Available features:
 * view the schedule of groups;
-* view the schedule of teachers.
+* view the schedule of teachers;
+* log in to an existing account;
+* sign up.
 
 #### 4.2 Student user feature description
 The student's account capabilities allow you to view all the functionality of the program without being able to make any changes.
