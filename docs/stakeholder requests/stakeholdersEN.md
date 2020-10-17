@@ -34,6 +34,7 @@ This document aims to define the basic requirements for development, functional 
 The list of requirements given in the document is the basis of the technical task for the development of this service.
 #### 1.3 List of abbreviations and definitions
 Application Programming Interface (API) is a set of subroutine definitions, interoperability protocols, and software development tools. Simplified is a set of well-defined methods for the interaction of different components. The API provides the developer with tools for rapid software development. API can be for web-based systems, operating systems, databases, hardware, software libraries.
+
 A Java Virtual Machine (JVM) is a set of computer programs and data structures that use a virtual machine model to execute other computer programs or scripts.
 ## 2. Short product overview
 The Education Control System is a system that provides the necessary information and a comfortable connection between students and teachers. The database of the system can store materials of lectures, practical tasks, events, schedules for all probable groups, both students and separately for teachers.
