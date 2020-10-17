@@ -62,10 +62,10 @@ Available features:
 The student's account capabilities allow you to view all the functionality of the program without being able to make any changes.
 
 Available features:
-* view group schedules
-* view the schedule of teachers
-* view homework
-* view own attendance
+* view group schedules;
+* view the schedule of teachers;
+* view homework;
+* view own attendance.
 
 #### 4.3 Leader of the group user feature description
 The leader of the group user is a representative of the students of the group, who is elected by the majority of students of the academic group by direct vote. The capabilities of the elder's account provide a relationship between the students of the group and the teacher.
@@ -73,7 +73,7 @@ The leader of the group user is a representative of the students of the group, w
 Available features:
 * attach practical tasks and lecture materials to classes in the schedule;
 * add to the schedule of training and consultation with the consent of the teacher;
-* provide a list of students present at a particular class
+* provide a list of students present at a particular class;
 * use student user type capabilities.
 
 #### 4.4 Teacher user feature description
