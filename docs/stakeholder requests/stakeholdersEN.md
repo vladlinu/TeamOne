@@ -34,6 +34,7 @@ This document aims to define the basic requirements for development, functional 
 The list of requirements given in the document is the basis of the technical task for the development of this service.
 #### 1.3 List of abbreviations and definitions
 Application Programming Interface (API) is a set of subroutine definitions, interoperability protocols, and software development tools. Simplified is a set of well-defined methods for the interaction of different components. The API provides the developer with tools for rapid software development. API can be for web-based systems, operating systems, databases, hardware, software libraries.
+
 A Java Virtual Machine (JVM) is a set of computer programs and data structures that use a virtual machine model to execute other computer programs or scripts.
 ## 2. Short product overview
 The Education Control System is a system that provides the necessary information and a comfortable connection between students and teachers. The database of the system can store materials of lectures, practical tasks, events, schedules for all probable groups, both students and separately for teachers.
@@ -54,16 +55,18 @@ This type of user is designed to quickly view the schedule if you do not need to
 
 Available features:
 * view the schedule of groups;
-* view the schedule of teachers.
+* view the schedule of teachers;
+* log in to an existing account;
+* sign up.
 
 #### 4.2 Student user feature description
 The student's account capabilities allow you to view all the functionality of the program without being able to make any changes.
 
 Available features:
-* view group schedules
-* view the schedule of teachers
-* view homework
-* view own attendance
+* view group schedules;
+* view the schedule of teachers;
+* view homework;
+* view own attendance.
 
 #### 4.3 Leader of the group user feature description
 The leader of the group user is a representative of the students of the group, who is elected by the majority of students of the academic group by direct vote. The capabilities of the elder's account provide a relationship between the students of the group and the teacher.
@@ -71,7 +74,7 @@ The leader of the group user is a representative of the students of the group, w
 Available features:
 * attach practical tasks and lecture materials to classes in the schedule;
 * add to the schedule of training and consultation with the consent of the teacher;
-* provide a list of students present at a particular class
+* provide a list of students present at a particular class;
 * use student user type capabilities.
 
 #### 4.4 Teacher user feature description
