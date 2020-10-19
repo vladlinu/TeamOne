@@ -38,7 +38,7 @@ end note
  та закриває спливаюче вікно.;
 
 note right #aaffaa
-<font color=red><b> Можливо EX_01.
+<font color=red><b> Можливо EX_00.
 end note
 
 : Система видаляє обране заняття з розкладу.;
