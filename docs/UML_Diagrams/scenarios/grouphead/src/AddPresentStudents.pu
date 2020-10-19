@@ -2,7 +2,7 @@
 left header
 <font color=000 size=18><b>Package:</b> Grouphead
 
-<font color=000 size=16><b>ID:</b> UC-3
+<font color=000 size=16><b>ID:</b> GC-3
 <font color=000 size=16><b>Назва:</b> Заповнення списку студентів, присутніх на певному занятті.
 <font color=000 size=16><b>Учасники:</b> Староста, Система.
 <font color=000 size=16><b>Передумови:</b> Староста авторизований в системі.
