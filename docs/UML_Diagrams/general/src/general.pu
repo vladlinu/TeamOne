@@ -1,1 +1,80 @@
+@startuml
+right header
+<font size=24 color=black>Package: <b>GC-1
+end header
 
+title
+<font size=18 color=black>Система контролю навчання
+<font size=16 color=black>Діаграма прецедентів
+
+end title
+
+actor "Неавторизований користувач" as Guest
+actor "Студент" as Student
+actor "Староста" as GroupHead
+actor "Викладач" as Teacher
+actor "Адміністратор" as Admin
+
+' UCes for Guest:
+usecase "<b>UC-1</b>\nАвторизація" as UC1_Guest
+usecase "<b>UC-2</b>\nПерегляд розкладу групи" as UC2_Guest
+usecase "<b>UC-3</b>\nПерегляд розкладу викладача" as UC3_Guest
+
+' UCes for Student:
+usecase "<b>SC-1</b>\nПерегляд домашнього завдання" as SC1_Student
+usecase "<b>SC-2</b>\nПерегляд власної відвідуваності" as SC2_Student
+
+' UCes for GroupHead:
+usecase "<b>GC-1</b>\nПрикріплення домашнього завдання" as GC1_GroupHead
+usecase "<b>GC-2</b>\nЗаповнення списку студентів,\nприсутніх на певному занятті" as GC2_GroupHead
+usecase "<b>GC-3</b>\nНадання списку студентів,\nприсутніх на певному занятті" as GC3_GroupHead
+
+' UCes for Teacher:
+usecase "<b>TC-1</b>\nПерегляд присутності на занятті" as TC1_Teacher
+usecase "<b>TC-2</b>\nПрикріплення домашнього\nзавдання до заняття" as TC2_Teacher
+usecase "<b>TC-3</b>\nСтворення певної зустрічі,\nщо поза розкладом" as TC3_Teacher
+
+' UCes for Admin:
+usecase "<b>AC-1</b>\Додавання нового заняття до розкладу" as AC1_Admin
+usecase "<b>AC-2</b>\nРедагування доданого заняття в розкладі" as AC2_Admin
+usecase "<b>AC-3</b>\nВидалення доданого заняття в розкладі" as AC3_Admin
+usecase "<b>AC-4</b>\nДодавання нового розкладу\n занять до системи" as AC4_Admin
+usecase "<b>AC-5</b>\nРедагування існуючого розкладу\n занять в системі" as AC5_Admin
+
+' Actors connections
+Student -u-|> Guest
+GroupHead -u-|> Guest
+Teacher -u-|> Guest
+
+Admin -u--|> Student
+Admin -u--|> GroupHead
+Admin -u--|> Teacher
+
+' UCes connectios
+Guest -u-> UC1_Guest
+Guest -u-> UC2_Guest
+Guest -u-> UC3_Guest
+
+Student -u-> SC1_Student
+Student -d-> SC2_Student
+
+GroupHead -r-> GC1_GroupHead
+GroupHead -d-> GC2_GroupHead
+GroupHead -l-> GC3_GroupHead
+
+Teacher -u-> TC1_Teacher
+Teacher -u-> TC2_Teacher
+Teacher -r--> TC3_Teacher
+
+Admin -d--> AC1_Admin
+Admin -d-> AC2_Admin
+Admin -d-> AC3_Admin
+Admin -d-> AC4_Admin
+Admin -d--> AC5_Admin
+
+right footer
+Система контролю навчання. Модель прецедентів.
+НТУУ КПІ ім.І.Сікорського
+Киів-2020
+end footer
+@enduml
