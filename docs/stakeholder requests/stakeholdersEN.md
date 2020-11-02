@@ -56,8 +56,7 @@ This type of user is designed to quickly view the schedule if you do not need to
 Available features:
 * view the schedule of groups;
 * view the schedule of teachers;
-* log in to an existing account;
-* sign up.
+* log in to an existing account.
 
 #### 4.2 Student user feature description
 The student's account capabilities allow you to view all the functionality of the program without being able to make any changes.
@@ -73,7 +72,7 @@ The leader of the group user is a representative of the students of the group, w
 
 Available features:
 * attach practical tasks and lecture materials to classes in the schedule;
-* add to the schedule of training and consultation with the consent of the teacher;
+* add to the schedule of training and consultation;
 * provide a list of students present at a particular class;
 * use student user type capabilities.
 
