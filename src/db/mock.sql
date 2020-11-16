@@ -1,3 +1,4 @@
+-- groups
 INSERT INTO Groups(id, name) VALUES(1, 'First Group');
 INSERT INTO Groups(id, name) VALUES(2, 'Second Group');
 INSERT INTO Groups(id, name) VALUES(3, 'Third Group');
@@ -15,10 +16,10 @@ INSERT INTO Users(login, name, group_id, user_type, password_salt, password_hash
 INSERT INTO Users(login, name, group_id, user_type, password_salt, password_hash) VALUES(‘va9rkw2’, 'Ilonov K.E.', 2, ‘student’, ‘sdsdfsertgf’, ‘dssdfdertd4’);
 
 -- 3 group
-INSERT INTO Users(login, name, group_id, user_type, password_salt, password_hash) VALUES(‘fsf1467’, 'Josepe S.A.', 1, ‘group_head’, ‘123sacQW@asd’, ‘123456789’);
-INSERT INTO Users(login, name, group_id, user_type, password_salt, password_hash) VALUES(‘nsddw002’, 'Naluvayko R.I.', 1, ‘student’, ‘#$d123SA@dA2’, ‘sdf1123’);
-INSERT INTO Users(login, name, group_id, user_type, password_salt, password_hash) VALUES(‘port92’, 'Pokolyuk W.K.', 1, ‘student’, ‘dsfhsfdh4’, ‘asdwasd2000’);
-INSERT INTO Users(login, name, group_id, user_type, password_salt, password_hash) VALUES(‘kolya073’, 'Ivanko K.O.', 1, ‘student’, ‘sdf34tgergf’, ‘kolya073123’);
+INSERT INTO Users(login, name, group_id, user_type, password_salt, password_hash) VALUES(‘fsf1467’, 'Josepe S.A.', 3, ‘group_head’, ‘123sacQW@asd’, ‘123456789’);
+INSERT INTO Users(login, name, group_id, user_type, password_salt, password_hash) VALUES(‘nsddw002’, 'Naluvayko R.I.', 3, ‘student’, ‘#$d123SA@dA2’, ‘sdf1123’);
+INSERT INTO Users(login, name, group_id, user_type, password_salt, password_hash) VALUES(‘port92’, 'Pokolyuk W.K.', 3, ‘student’, ‘dsfhsfdh4’, ‘asdwasd2000’);
+INSERT INTO Users(login, name, group_id, user_type, password_salt, password_hash) VALUES(‘kolya073’, 'Ivanko K.O.', 3, ‘student’, ‘sdf34tgergf’, ‘kolya073123’);
 
 -- teachers
 INSERT INTO Users(login, name, user_type, password_salt, password_hash) VALUES(‘upa1221’, 'Bandera S.A.',‘teacher’, ‘slava@asd’, ‘kwev3es’);
@@ -37,7 +38,7 @@ INSERT INTO Lessons(id, date, time, homework, discipline, group_id, description,
 INSERT INTO Lessons(id, date, time, homework, discipline, group_id, description, teacher_login) VALUES(4, date ‘2020-11-16’,  time ‘10:05-11:00’, ‘Test’, ‘English’, 2, NULL, ‘directoria1’);
 INSERT INTO Lessons(id, date, time, homework, discipline, group_id, description, teacher_login) VALUES(5, date ‘2020-11-17’,  time ‘11:05-12:00’, NULL, ‘National defence’, 3, NULL, ‘upa1221’);
 
--- presents for 12 users
+-- presents 
 INSERT INTO Presents(lesson_id, login) VALUES(1, ‘dominar3000’);
 INSERT INTO Presents(lesson_id, login) VALUES(1, ‘wqa092’);
 INSERT INTO Presents(lesson_id, login) VALUES(1, ‘vasya092’);

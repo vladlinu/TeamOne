@@ -30,5 +30,3 @@ CREATE TABLE Presents (
   login varchar(50) REFERENCES Users(login),
   PRIMARY KEY(lesson_id, login) );
 
-
-
