@@ -21,10 +21,10 @@ public class LessonService {
 
     public boolean setLessonHomework(User user, Integer lessonId, String homework) {
         Lesson lesson = lessonRepository.getLessonById(lessonId);
-        if (!(authenticationService.isValid(user) ||
-                user.getUserType().equals(UserType.TEACHER) ||
+        if (!(authenticationService.isValid(user) &&
+                (user.getUserType().equals(UserType.TEACHER) ||
                 user.getUserType().equals(UserType.ADMIN) ||
-                (user.getUserType().equals(UserType.GROUP_HEAD) && lesson.getGroupId().equals(user.getGroupId())))) {
+                (user.getUserType().equals(UserType.GROUP_HEAD) && lesson.getGroupId().equals(user.getGroupId()))))) {
             return false;
         }
         lesson.setHomework(homework);
@@ -40,10 +40,10 @@ public class LessonService {
     }
 
     public boolean createLesson(User user, Integer lessonId, LocalDateTime dateTime, String description, String discipline, Integer groupId, String teacherLogin) {
-        if (!(authenticationService.isValid(user) ||
-                user.getUserType().equals(UserType.TEACHER) ||
+        if (!(authenticationService.isValid(user) &&
+                (user.getUserType().equals(UserType.TEACHER) ||
                 user.getUserType().equals(UserType.ADMIN) ||
-                (user.getUserType().equals(UserType.GROUP_HEAD) && groupId.equals(user.getGroupId())))) {
+                (user.getUserType().equals(UserType.GROUP_HEAD) && groupId.equals(user.getGroupId()))))) {
             return false;
         }
         lessonRepository.createLesson(lessonId, dateTime, description, discipline, groupId, teacherLogin);
@@ -51,7 +51,7 @@ public class LessonService {
     }
 
     public boolean deleteLesson(User user, Integer lessonId) {
-        if (!(authenticationService.isValid(user) || user.getUserType().equals(UserType.ADMIN))) {
+        if (!(authenticationService.isValid(user) && user.getUserType().equals(UserType.ADMIN))) {
             return false;
         }
         lessonRepository.deleteLesson(lessonId);
@@ -59,7 +59,7 @@ public class LessonService {
     }
 
     public boolean editLesson(User user, Integer lessonId, LocalDateTime newDateTime, String newDescription, String newDiscipline, Integer newGroupId, String newTeacherLogin) {
-        if (!(authenticationService.isValid(user) || user.getUserType().equals(UserType.ADMIN))) {
+        if (!(authenticationService.isValid(user) && user.getUserType().equals(UserType.ADMIN))) {
             return false;
         }
         Lesson lesson = lessonRepository.getLessonById(lessonId);
