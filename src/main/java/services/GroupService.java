@@ -17,7 +17,7 @@ public class GroupService {
     }
 
     public boolean createGroup(User user, Integer id, String name, String groupHeadLogin) {
-        if (!authenticationService.isValid(user) && user.getUserType() == UserType.ADMIN) {
+        if (!(authenticationService.isValid(user) && user.getUserType() == UserType.ADMIN)) {
             return false;
         }
         groupRepository.createGroup(id, name, groupHeadLogin);
@@ -25,7 +25,7 @@ public class GroupService {
     }
 
     public boolean editGroup(User user, Integer groupId, String newName, String newGroupHeadLogin) {
-        if (authenticationService.isValid(user) && user.getUserType() == UserType.ADMIN) {
+        if (!(authenticationService.isValid(user) && user.getUserType() == UserType.ADMIN)) {
             return false;
         }
         Group group = groupRepository.findGroupById(groupId);
@@ -40,10 +40,17 @@ public class GroupService {
     }
 
     public boolean deleteGroup(User user, Integer id, String name, String groupHeadLogin) {
-        if (!authenticationService.isValid(user) && user.getUserType() == UserType.ADMIN) {
+        if (!(authenticationService.isValid(user) && user.getUserType() == UserType.ADMIN)) {
             return false;
         }
         groupRepository.deleteGroup(id, name, groupHeadLogin);
         return true;
+    }
+
+    public boolean isUserGroupMember(User user, Integer groupId, String userLogin) {
+        if (authenticationService.isValid(user) && user.getUserType() == UserType.ADMIN) {
+            return groupRepository.isUserGroupMember(userLogin, groupId);
+        }
+        return false;
     }
 }

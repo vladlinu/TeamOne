@@ -8,4 +8,5 @@ public interface GroupRepository {
     void deleteGroup(Integer groupId, String name, String groupHeadLogin);
     Group findGroupById(Integer groupId);
     void updateGroupInfo(Integer groupId, String newName, String newGroupHeadLogin);
+    boolean isUserGroupMember(String userLogin, Integer groupId);
 }
