@@ -5,11 +5,13 @@ public class User {
     private String login;
     private String password;
     private UserType userType;
+    private Integer groupId;
 
-    public User(String login, String password, UserType userType) {
+    public User(String login, String password, UserType userType, Integer groupId) {
         this.login = login;
         this.password = password;
         this.userType = userType;
+        this.groupId = groupId;
     }
 
     public String getLogin() {
@@ -34,5 +36,13 @@ public class User {
 
     public void setUserType(UserType userType) {
         this.userType = userType;
+    }
+
+    public Integer getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Integer groupId) {
+        this.groupId = groupId;
     }
 }

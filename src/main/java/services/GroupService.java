@@ -46,11 +46,4 @@ public class GroupService {
         groupRepository.deleteGroup(id, name, groupHeadLogin);
         return true;
     }
-
-    public boolean isUserGroupMember(User user, Integer groupId, String userLogin) {
-        if (authenticationService.isValid(user) && user.getUserType() == UserType.ADMIN) {
-            return groupRepository.isUserGroupMember(userLogin, groupId);
-        }
-        return false;
-    }
 }
