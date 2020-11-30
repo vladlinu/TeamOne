@@ -37,7 +37,7 @@ public class UserService {
             return false;
         }
     }
-    
+
     boolean changeAccountType(User caller, String login, UserType newType) {
         if (!(authenticationService.isValid(caller) && caller.getUserType() == UserType.ADMIN)) {
             return false;
