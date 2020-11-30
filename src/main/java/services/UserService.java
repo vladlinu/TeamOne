@@ -14,7 +14,6 @@ public class UserService {
         this.authenticationService = authenticationService;
     }
 
-    // Adding account
     boolean addAccount(User caller, String login, String name, UserType userType, String password, Integer groupId) {
         if (!(authenticationService.isValid(caller) && caller.getUserType() == UserType.ADMIN)) {
             return false;
@@ -27,7 +26,6 @@ public class UserService {
         }
     }
 
-    // Deleting account
     boolean deleteAccount(User caller, String login) {
         if (!(authenticationService.isValid(caller) && caller.getUserType() == UserType.ADMIN)) {
             return false;
@@ -39,8 +37,7 @@ public class UserService {
             return false;
         }
     }
-
-    // Changing account info
+    
     boolean changeAccountType(User caller, String login, UserType newType) {
         if (!(authenticationService.isValid(caller) && caller.getUserType() == UserType.ADMIN)) {
             return false;
