@@ -24,7 +24,7 @@ public class LessonService {
         if (!(authenticationService.isValid(user) ||
                 user.getUserType().equals(UserType.TEACHER) ||
                 user.getUserType().equals(UserType.ADMIN) ||
-                (user.getUserType().equals(UserType.GROUP_HEAD) && lesson.getGroupId().equals(user.getGroupId)))) {
+                (user.getUserType().equals(UserType.GROUP_HEAD) && lesson.getGroupId().equals(user.getGroupId())))) {
             return false;
         }
         lesson.setHomework(homework);
@@ -43,7 +43,7 @@ public class LessonService {
         if (!(authenticationService.isValid(user) ||
                 user.getUserType().equals(UserType.TEACHER) ||
                 user.getUserType().equals(UserType.ADMIN) ||
-                (user.getUserType().equals(UserType.GROUP_HEAD) && groupId.equals(user.getGroupId)))) {
+                (user.getUserType().equals(UserType.GROUP_HEAD) && groupId.equals(user.getGroupId())))) {
             return false;
         }
         lessonRepository.createLesson(lessonId, dateTime, description, discipline, groupId, teacherLogin);
