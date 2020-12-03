@@ -7,6 +7,8 @@ public interface CrudRepository<T, K> {
     /**
      * Must generate right id (even if entity has own id),
      * save it in database like new entity and return it with right id.
+     *
+     * USE ONLY FOR SAVING NEW ENTITY
      */
     T saveNewEntity(T entity);
 
@@ -16,6 +18,9 @@ public interface CrudRepository<T, K> {
 
     void deleteById(K id);
 
+    /**
+     * USE ONLY FOR UPDATING ALREADY EXISTING ENTITY!
+     */
     void update(T entity);
 
     boolean existsById(K login);
