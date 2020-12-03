@@ -2,48 +2,52 @@ package services;
 
 import domain.Group;
 import domain.User;
-import domain.UserType;
+import exceptions.PermissionException;
 import storage.GroupRepository;
+
+import java.util.Optional;
+
+import static exceptions.EntityExistException.groupAlreadyExists;
+import static exceptions.EntityNotExistException.*;
+import static exceptions.PermissionException.*;
 
 public class GroupService {
 
-    private final AuthenticationService authenticationService;
     private final GroupRepository groupRepository;
 
-    public GroupService(GroupRepository groupRepository, AuthenticationService authenticationService) {
+    public GroupService(GroupRepository groupRepository) {
         this.groupRepository = groupRepository;
-        this.authenticationService = authenticationService;
-
     }
 
-    public boolean createGroup(User user, Integer id, String name, String groupHeadLogin) {
-        if (!(authenticationService.isValid(user) && user.getUserType() == UserType.ADMIN)) {
-            return false;
+    public void saveNewGroup(User caller, Group group) throws PermissionException, IllegalArgumentException {
+        if (!caller.isAdmin()) {
+            throw notEnoughPermission(caller);
         }
-        groupRepository.createGroup(id, name, groupHeadLogin);
-        return true;
+        Optional<Group> groupWithSameName = groupRepository.findGroupByName(group.getName());
+        if (groupWithSameName.isPresent()) {
+            throw groupAlreadyExists(group);
+        }
+        group.setId(null);
+        groupRepository.saveNewEntity(group);
     }
 
-    public boolean editGroup(User user, Integer groupId, String newName, String newGroupHeadLogin) {
-        if (!(authenticationService.isValid(user) && user.getUserType() == UserType.ADMIN)) {
-            return false;
+    public void editGroup(User caller, Group group) throws PermissionException {
+        if (!caller.isAdmin()) {
+            throw notEnoughPermission(caller);
         }
-        Group group = groupRepository.findGroupById(groupId);
-        if (newName.equals("")) {
-            newName = group.getName();
+        if (!groupRepository.existsById(group.getId())) {
+            throw groupIsNotExist(group);
         }
-        if (newGroupHeadLogin.equals("")) {
-            newGroupHeadLogin = group.getGroupHeadLogin();
-        }
-        groupRepository.updateGroupInfo(groupId, newName, newGroupHeadLogin);
-        return true;
+        groupRepository.update(group);
     }
 
-    public boolean deleteGroup(User user, Integer id, String name, String groupHeadLogin) {
-        if (!(authenticationService.isValid(user) && user.getUserType() == UserType.ADMIN)) {
-            return false;
+    public void deleteGroup(User caller, Integer groupId) throws PermissionException {
+        if (!caller.isAdmin()) {
+            throw notEnoughPermission(caller);
         }
-        groupRepository.deleteGroup(id, name, groupHeadLogin);
-        return true;
+        if (groupRepository.existsById(groupId)) {
+            throw groupIsNotExist(groupId);
+        }
+        groupRepository.deleteById(groupId);
     }
 }

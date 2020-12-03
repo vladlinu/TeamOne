@@ -2,10 +2,8 @@ package storage;
 
 import domain.Group;
 
-public interface GroupRepository {
+import java.util.Optional;
 
-    void createGroup(Integer groupId, String name, String groupHeadLogin);
-    void deleteGroup(Integer groupId, String name, String groupHeadLogin);
-    Group findGroupById(Integer groupId);
-    void updateGroupInfo(Integer groupId, String newName, String newGroupHeadLogin);
+public interface GroupRepository extends CrudRepository<Group, Integer> {
+    Optional<Group> findGroupByName(String name);
 }
