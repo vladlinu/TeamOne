@@ -40,7 +40,7 @@ public class LessonRepositoryImpl implements LessonRepository {
 				String teacherLogin = lessonsSet.getString(7);
 
 				Map<String, Boolean> presentsForLesson = new HashMap<>();
-				Lesson lesson = new Lesson(presentsForLesson);
+				Lesson lesson = new Lesson(id, dateTime, description, discipline, homework, Integer.valueOf(groupId), teacherLogin, presentsForLesson);
 
 				String getPresentsCommand = String.format("Select * FROM Presents WHERE lesson_id = %s", id);
 
@@ -48,15 +48,6 @@ public class LessonRepositoryImpl implements LessonRepository {
 				while (presentSet.next()) {
 					lesson.addPresent(presentSet.getString(1));
 				}
-
-				lesson.setLessonId(id);
-				lesson.setDateTime(dateTime);
-				lesson.setDescription(description);
-				lesson.setHomework(homework);
-				lesson.setDiscipline(discipline);
-				lesson.setTeacherLogin(teacherLogin);
-				lesson.setGroupId(Integer.valueOf(groupId));
-
 				lessons.add(lesson);
 			}
 
@@ -92,7 +83,8 @@ public class LessonRepositoryImpl implements LessonRepository {
 
 
 				Map<String, Boolean> presentsForLesson = new HashMap<>();
-				Lesson lesson = new Lesson(presentsForLesson);
+				Lesson lesson = new Lesson(id, dateTime, description, discipline, homework, groupId, teacherLogin, presentsForLesson);
+
 
 				String getPresentsCommand = String.format("Select * FROM Presents WHERE lesson_id = %s", id);
 
@@ -154,7 +146,8 @@ public class LessonRepositoryImpl implements LessonRepository {
 				String teacherLogin = lessonsSet.getString(7);
 
 				Map<String, Boolean> presentsForLesson = new HashMap<>();
-				Lesson lesson = new Lesson(presentsForLesson);
+				Lesson lesson = new Lesson(id, dateTime, description, discipline, homework, Integer.valueOf(groupId), teacherLogin, presentsForLesson);
+
 
 				String getPresentsCommand = String.format("Select * FROM Presents WHERE lesson_id = %s", id);
 
@@ -203,7 +196,7 @@ public class LessonRepositoryImpl implements LessonRepository {
 				String teacherLogin = lessonsSet.getString(7);
 
 				Map<String, Boolean> presentsForLesson = new HashMap<>();
-				Lesson lesson = new Lesson(presentsForLesson);
+				Lesson lesson = new Lesson(id, dateTime, description, discipline, homework, Integer.valueOf(groupId), teacherLogin, presentsForLesson);
 
 				String getPresentsCommand = String.format("Select * FROM Presents WHERE lesson_id = %s", id);
 
