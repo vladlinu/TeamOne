@@ -257,7 +257,7 @@ public class LessonRepositoryImpl implements LessonRepository {
 
 			for (String name : presents.keySet()) {
 				if (presents.get(name)) {
-					String existsPresentCommand = String.format("EXISTS (SELECT * FROM Presents WHERE lesson_id = %s AND login = '%s')", id, name);
+					String existsPresentCommand = String.format("SELECT * FROM Presents WHERE lesson_id = %s AND login = '%s'", id, name);
 
 					ResultSet present = connector.executeStatement(existsPresentCommand);
 					if (present == null) {
@@ -269,7 +269,7 @@ public class LessonRepositoryImpl implements LessonRepository {
 						present.close();
 					}
 				} else {
-					String existsPresentCommand = String.format("EXISTS (SELECT * FROM Presents WHERE lesson_id = %s AND login = '%s')", id, name);
+					String existsPresentCommand = String.format("SELECT * FROM Presents WHERE lesson_id = %s AND login = '%s'", id, name);
 
 					ResultSet present = connector.executeStatement(existsPresentCommand);
 					if (present != null) {
@@ -287,9 +287,14 @@ public class LessonRepositoryImpl implements LessonRepository {
 
 	@Override
 	public boolean existsById(Integer login) {
-		String existsLessonCommand = String.format("EXISTS (SELECT discipline FROM Lessons WHERE id = %s)", login);
+		String existsLessonCommand = String.format("SELECT discipline FROM Lessons WHERE id = %s", login);
 
 		ResultSet lesson = connector.executeStatement(existsLessonCommand);
-		return lesson != null;
+
+        try {
+        	return lesson.next();
+		} catch (SQLException ex) {
+        	return false;
+		}
 	}
 }
