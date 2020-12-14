@@ -34,13 +34,19 @@ public class GroupRepositoryImpl implements GroupRepository {
     public Optional<Group> findById(Integer id) {
         String statement = "SELECT * FROM Groups WHERE id = " + id;
         ResultSet result = connector.executeStatement(statement);
+        String getLoginsStatement = "SELECT login FROM Users WHERE group_id = " + id;
+        ResultSet resultLogins = connector.executeStatement(getLoginsStatement);
+        ArrayList<String> memberLogins = new ArrayList<>();
         if (result == null) {
             return Optional.empty();
         } else {
             try {
                 String name = result.getString(2);
                 String groupHeadLogin = result.getString(3);
-                return Optional.of(new Group(id, name, groupHeadLogin));
+                while(resultLogins.next()) {
+                    memberLogins.add(resultLogins.getString(1));
+                }
+                return Optional.of(new Group(id, name, groupHeadLogin, memberLogins));
             } catch (SQLException e) {
                 return Optional.empty();
             }
@@ -57,7 +63,13 @@ public class GroupRepositoryImpl implements GroupRepository {
                 Integer id = result.getInt(1);
                 String name = result.getString(2);
                 String groupHeadLogin = result.getString(3);
-                Group group = new Group(id, name, groupHeadLogin);
+                String getLoginsStatement = "SELECT login FROM Users WHERE group_id = " + id;
+                ResultSet resultLogins = connector.executeStatement(getLoginsStatement);
+                ArrayList<String> memberLogins = new ArrayList<>();
+                while(resultLogins.next()) {
+                    memberLogins.add(resultLogins.getString(1));
+                }
+                Group group = new Group(id, name, groupHeadLogin, memberLogins);
                 groupList.add(group);
             }
         } catch (SQLException exception) {
@@ -98,7 +110,13 @@ public class GroupRepositoryImpl implements GroupRepository {
             try {
                 Integer id = result.getInt(1);
                 String groupHeadLogin = result.getString(3);
-                return Optional.of(new Group(id, name, groupHeadLogin));
+                String getLoginsStatement = "SELECT login FROM Users WHERE group_id = " + id;
+                ResultSet resultLogins = connector.executeStatement(getLoginsStatement);
+                ArrayList<String> memberLogins = new ArrayList<>();
+                while(resultLogins.next()) {
+                    memberLogins.add(resultLogins.getString(1));
+                }
+                return Optional.of(new Group(id, name, groupHeadLogin, memberLogins));
             } catch (SQLException e) {
                 return Optional.empty();
             }
