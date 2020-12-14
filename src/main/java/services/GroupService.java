@@ -23,8 +23,7 @@ public class GroupService {
         if (!caller.isAdmin()) {
             throw notEnoughPermission(caller);
         }
-        Optional<Group> groupWithSameName = groupRepository.findGroupByName(group.getName());
-        if (groupWithSameName.isPresent()) {
+        if (groupRepository.existsById(group.getId())) {
             throw groupAlreadyExists(group);
         }
         group.setId(null);
@@ -45,7 +44,7 @@ public class GroupService {
         if (!caller.isAdmin()) {
             throw notEnoughPermission(caller);
         }
-        if (groupRepository.existsById(groupId)) {
+        if (!groupRepository.existsById(groupId)) {
             throw groupIsNotExist(groupId);
         }
         groupRepository.deleteById(groupId);
