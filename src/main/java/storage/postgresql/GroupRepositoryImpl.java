@@ -1,19 +1,19 @@
 package storage.postgresql;
 
 import domain.Group;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import storage.GroupRepository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
+@Data
+@AllArgsConstructor
 public class GroupRepositoryImpl implements GroupRepository {
 
     public Connector connector;
-
-    public GroupRepositoryImpl(Connector connector) {
-            this.connector = connector;
-    }
 
     @Override
     public Group saveNewEntity(Group entity) {

@@ -2,25 +2,21 @@ package storage.postgresql;
 
 import domain.User;
 import domain.UserType;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import storage.UserRepository;
 
 import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Optional;
 
+
+@Data
+@AllArgsConstructor
 public class UserRepositoryImpl implements UserRepository {
 
     public Connector connector;
-    private final HashMap<UserType, String> transformations;
-
-    public UserRepositoryImpl(Connector connector) {
-        this.connector = connector;
-        transformations = new HashMap<>();
-        transformations.put(UserType.STUDENT, "student");
-        transformations.put(UserType.GROUP_HEAD, "group_head");
-        transformations.put(UserType.TEACHER, "teacher");
-        transformations.put(UserType.ADMIN, "admin");
-    }
+    private final HashMap<UserType, String> convertUserTypeForm = init();
 
     @Override
     public User saveNewEntity(User entity) {
@@ -44,7 +40,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void update(User entity) {
-        String newUserType = transformations.get(entity.getUserType());
+        String newUserType = convertUserTypeForm.get(entity.getUserType());
         String statement = "UPDATE Users SET " + "(name, group_id, user_type, password_salt, password_hash) = " +
                 "('" + entity.getName() + "', " + entity.getGroupId() + ", '" + newUserType +
                 "', '" + entity.getPassword() + "', '" + entity.getPassword() + "') " +
@@ -58,5 +54,14 @@ public class UserRepositoryImpl implements UserRepository {
                 + login + "')";
         ResultSet result = connector.executeStatement(statement);
         return result != null;
+    }
+
+    private HashMap<UserType, String> init() {
+        HashMap<UserType, String> convertHashMap = new HashMap<>();
+        convertHashMap.put(UserType.STUDENT, "student");
+        convertHashMap.put(UserType.GROUP_HEAD, "group_head");
+        convertHashMap.put(UserType.TEACHER, "teacher");
+        convertHashMap.put(UserType.ADMIN, "admin");
+        return convertHashMap;
     }
 }
