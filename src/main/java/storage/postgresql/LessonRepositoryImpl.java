@@ -31,16 +31,17 @@ public class LessonRepositoryImpl implements LessonRepository {
 
 		try {
 			while (lessonsSet.next()) {
-				Integer id = lessonsSet.getInt(0);
-				LocalDate localDate = lessonsSet.getObject(1, LocalDate.class);
-				LocalTime localTime = lessonsSet.getObject(2, LocalTime.class);
+				Integer id = lessonsSet.getInt(1);
+				String localDate = lessonsSet.getString(2);
+				String localTime = lessonsSet.getString(3);
 
-				LocalDateTime dateTime = localDate.atTime(localTime);
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+				LocalDateTime dateTime = LocalDateTime.parse(localDate + " " + localTime, formatter);
 
-				String homework = lessonsSet.getString(3);
-				String discipline = lessonsSet.getString(4);
-				String description = lessonsSet.getString(6);
-				String teacherLogin = lessonsSet.getString(7);
+				String homework = lessonsSet.getString(4);
+				String discipline = lessonsSet.getString(5);
+				String description = lessonsSet.getString(7);
+				String teacherLogin = lessonsSet.getString(8);
 
 				Map<String, Boolean> presentsForLesson = new HashMap<>();
 				Lesson lesson = new Lesson(id, dateTime, description, discipline, homework, Integer.valueOf(groupId), teacherLogin, presentsForLesson);
@@ -49,7 +50,7 @@ public class LessonRepositoryImpl implements LessonRepository {
 
 				ResultSet presentSet = connector.executeStatement(getPresentsCommand);
 				while (presentSet.next()) {
-					lesson.addPresent(presentSet.getString(1));
+					lesson.addPresent(presentSet.getString(2));
 				}
 				lessons.add(lesson);
 			}
