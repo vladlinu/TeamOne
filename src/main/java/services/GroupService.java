@@ -5,6 +5,7 @@ import domain.User;
 import exceptions.PermissionException;
 import storage.GroupRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 import static exceptions.EntityExistException.groupAlreadyExists;
@@ -23,8 +24,7 @@ public class GroupService {
         if (!caller.isAdmin()) {
             throw notEnoughPermission(caller);
         }
-        Optional<Group> groupWithSameName = groupRepository.findGroupByName(group.getName());
-        if (groupWithSameName.isPresent()) {
+        if (groupRepository.existsById(group.getId())) {
             throw groupAlreadyExists(group);
         }
         group.setId(null);
@@ -45,7 +45,7 @@ public class GroupService {
         if (!caller.isAdmin()) {
             throw notEnoughPermission(caller);
         }
-        if (groupRepository.existsById(groupId)) {
+        if (!groupRepository.existsById(groupId)) {
             throw groupIsNotExist(groupId);
         }
         groupRepository.deleteById(groupId);
@@ -53,5 +53,9 @@ public class GroupService {
 
     public Optional<Group> findGroupByName(String groupName) {
         return groupRepository.findGroupByName(groupName);
+    }
+
+    public List<String> getGroupMembers(Integer id) {
+        return groupRepository.findById(id).orElseThrow(() -> groupIsNotExist(id)).getMemberLogins();
     }
 }
