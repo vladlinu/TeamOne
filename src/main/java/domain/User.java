@@ -1,48 +1,33 @@
 package domain;
 
+import lombok.Data;
+
+@Data
 public class User {
 
     private String login;
     private String password;
+    private String name;
     private UserType userType;
     private Integer groupId;
 
-    public User(String login, String password, UserType userType, Integer groupId) {
-        this.login = login;
-        this.password = password;
-        this.userType = userType;
-        this.groupId = groupId;
+    public boolean isAdmin() {
+        return userType == UserType.ADMIN;
     }
 
-    public String getLogin() {
-        return login;
+    public boolean isTeacher() {
+        return userType == UserType.TEACHER;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public boolean isGrouphead() {
+        return userType == UserType.GROUP_HEAD;
     }
 
-    public String getPassword() {
-        return password;
+    public boolean isStudent() {
+        return userType == UserType.STUDENT;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public UserType getUserType() {
-        return userType;
-    }
-
-    public void setUserType(UserType userType) {
-        this.userType = userType;
-    }
-
-    public Integer getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(Integer groupId) {
-        this.groupId = groupId;
+    public boolean isUnknown() {
+        return userType == UserType.Unknown;
     }
 }

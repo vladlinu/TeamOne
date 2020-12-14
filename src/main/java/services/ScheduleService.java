@@ -17,12 +17,12 @@ public class ScheduleService {
     List<Lesson> getTeacherSchedule(String teacherID) {
         LocalDate from = LocalDate.now();
         LocalDate to = from.plusWeeks(2);
-        return lessonRepository.getLessonsByTeacherIdFromInterval(teacherID, from, to);
+        return lessonRepository.findLessonsByTeacherIdFromInterval(teacherID, from, to);
     }
 
     List<Lesson> getGroupSchedule(String groupId) {
         LocalDate from = LocalDate.now();
         LocalDate to = from.plusWeeks(2);
-        return lessonRepository.getLessonsByGroupIdFromInterval(groupId, from, to);
+        return lessonRepository.findLessonsByGroupIdFromInterval(groupId, from, to);
     }
 }

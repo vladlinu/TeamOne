@@ -1,113 +1,110 @@
 package services;
 
+import domain.Group;
 import domain.Lesson;
 import domain.User;
-import domain.UserType;
+import exceptions.PermissionException;
+import storage.GroupRepository;
 import storage.LessonRepository;
-import storage.UserRepository;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.Set;
+
+import static exceptions.EntityNotExistException.*;
+import static exceptions.EntityNotExistException.lessonIsNotExist;
+import static exceptions.PermissionException.*;
 
 public class LessonService {
 
-    private final AuthenticationService authenticationService;
     private final LessonRepository lessonRepository;
-    private UserRepository userRepository;
+    private final GroupRepository groupRepository;
 
-    LessonService(AuthenticationService authenticationService, LessonRepository lessonRepository) {
-        this.authenticationService = authenticationService;
+    LessonService(LessonRepository lessonRepository, GroupRepository groupRepository) {
         this.lessonRepository = lessonRepository;
+        this.groupRepository = groupRepository;
     }
 
-    boolean setLessonHomework(User user, Integer lessonId, String homework) {
-        Lesson lesson = lessonRepository.getLessonById(lessonId);
-        if (!(authenticationService.isValid(user) &&
-                (user.getUserType().equals(UserType.TEACHER) ||
-                        user.getUserType().equals(UserType.ADMIN) ||
-                        (user.getUserType().equals(UserType.GROUP_HEAD) && lesson.getGroupId().equals(user.getGroupId()))))) {
-            return false;
+    void setLessonHomework(User caller, Integer lessonId, String homework) throws PermissionException {
+        Lesson lesson = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> lessonIsNotExist(lessonId));
+        Group group = groupRepository.findById(lesson.getGroupId())
+                .orElseThrow(() -> groupIsNotExist(lesson.getGroupId()));
+
+        if (!isTeacherOrAdminOrGrouphead(caller, group, lesson)) {
+            throw notEnoughPermission(caller.getLogin());
         }
+
         lesson.setHomework(homework);
-        return true;
+        lessonRepository.update(lesson);
     }
 
-    String getLessonHomework(User user, Integer lessonId) {
-        if (!authenticationService.isValid(user)) {
-            return null;
-        }
-        Lesson lesson = lessonRepository.getLessonById(lessonId);
-        return lesson.getHomework();
+    Lesson getLessonToEditPresence(Integer lessonId) throws IllegalArgumentException {
+        return lessonRepository
+                .findById(lessonId)
+                .orElseThrow(() -> lessonIsNotExist(lessonId));
     }
 
-    boolean createLesson(User user, Integer lessonId, LocalDateTime dateTime, String description, String discipline, Integer groupId, String teacherLogin) {
-        if (!(authenticationService.isValid(user) &&
-                (user.getUserType().equals(UserType.TEACHER) ||
-                        user.getUserType().equals(UserType.ADMIN) ||
-                        (user.getUserType().equals(UserType.GROUP_HEAD) && groupId.equals(user.getGroupId()))))) {
-            return false;
+    void saveLesson(User caller, Lesson lesson) throws PermissionException {
+        Group group = groupRepository.findById(lesson.getGroupId())
+                .orElseThrow(() -> groupIsNotExist(lesson.getGroupId()));
+
+        if (!(isTeacherOrAdminOrGrouphead(caller, group, lesson))) {
+            throw notEnoughPermission(caller.getLogin());
         }
-        lessonRepository.createLesson(lessonId, dateTime, description, discipline, groupId, teacherLogin);
-        return true;
+
+        lesson.setLessonId(null);
+        lessonRepository.saveNewEntity(lesson);
     }
 
-    boolean deleteLesson(User user, Integer lessonId) {
-        if (!(authenticationService.isValid(user) && user.getUserType().equals(UserType.ADMIN))) {
-            return false;
+    void deleteLesson(User caller, Integer lessonId) throws PermissionException {
+        if (!caller.isAdmin()) {
+            throw notEnoughPermission(caller.getLogin());
         }
-        lessonRepository.deleteLesson(lessonId);
-        return true;
+        if (!lessonRepository.existsById(lessonId)) {
+            throw lessonIsNotExist(lessonId);
+        }
+        lessonRepository.deleteById(lessonId);
     }
 
-    boolean editLesson(User user, Integer lessonId, LocalDateTime newDateTime, String newDescription, String newDiscipline, Integer newGroupId, String newTeacherLogin) {
-        if (!(authenticationService.isValid(user) && user.getUserType().equals(UserType.ADMIN))) {
-            return false;
+    void editLesson(User caller, Lesson lesson) throws PermissionException {
+        if (!caller.isAdmin()) {
+            throw notEnoughPermission(caller.getLogin());
         }
-        Lesson lesson = lessonRepository.getLessonById(lessonId);
-        if (newDateTime == null) {
-            newDateTime = lesson.getDateTime();
+        if (!lessonRepository.existsById(lesson.getLessonId())) {
+            throw lessonIsNotExist(lesson);
         }
-        if (newDescription.equals("")) {
-            newDescription = lesson.getDescription();
-        }
-        if (newDiscipline.equals("")) {
-            newDiscipline = lesson.getDiscipline();
-        }
-        if (newGroupId == null) {
-            newGroupId = lesson.getGroupId();
-        }
-        if (newTeacherLogin.equals("")) {
-            newTeacherLogin = lesson.getTeacherLogin();
-        }
-        lessonRepository.updateLessonInfo(lessonId, newDateTime, newDescription, newDiscipline, newGroupId, newTeacherLogin);
-        return true;
+        lessonRepository.update(lesson);
     }
 
-    boolean removePresence(User user, Integer lessonId, String studentLogin) {
-        Lesson lesson = lessonRepository.getLessonById(lessonId);
-        if (!(authenticationService.isValid(user) && user.getUserType().equals(UserType.ADMIN))) {
-            return false;
-        }
+    void removeStudentPresence(User caller, Integer lessonId, String studentLogin) throws PermissionException {
+        Lesson lesson = getLessonToEditPresence(caller, lessonId);
         lesson.removePresent(studentLogin);
-        return true;
+        lessonRepository.update(lesson);
     }
 
-    boolean addPresence(User user, Integer lessonId, String studentLogin) {
-        Lesson lesson = lessonRepository.getLessonById(lessonId);
-        if (!(authenticationService.isValid(user) && user.getUserType().equals(UserType.ADMIN)
-                && user.getUserType().equals(UserType.TEACHER))) {
-            return false;
-        }
+    void addStudentPresence(User caller, Integer lessonId, String studentLogin) throws PermissionException {
+        Lesson lesson = getLessonToEditPresence(caller, lessonId);
         lesson.addPresent(studentLogin);
-        return true;
+        lessonRepository.update(lesson);
     }
 
-    Set<String> getPresence(User user, Integer lessonId) {
-        Lesson lesson = lessonRepository.getLessonById(lessonId);
-        if (authenticationService.isValid(user)) {
-            return lesson.getPresentStudentLogins();
+    private Lesson getLessonToEditPresence(User caller, Integer lessonId) throws PermissionException {
+        Lesson lesson = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> lessonIsNotExist(lessonId));
+        Group group = groupRepository.findById(lesson.getGroupId())
+                .orElseThrow(() -> groupIsNotExist(lesson.getGroupId()));
+        if (!isTeacherOrAdminOrGrouphead(caller, group, lesson)) {
+            throw notEnoughPermission(caller.getLogin());
         }
-        return Collections.emptySet();
+        return lesson;
+    }
+
+    Set<String> getPresence(User caller, Integer lessonId) {
+        Lesson lesson = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> lessonIsNotExist(lessonId));
+        return lesson.getPresentStudentLogins();
+    }
+
+    private boolean isTeacherOrAdminOrGrouphead(User user, Group group, Lesson lesson) {
+        return lesson.isLessonTeacher(user) || user.isAdmin() || group.isGrouphead(user);
     }
 }

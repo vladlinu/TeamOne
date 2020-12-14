@@ -3,6 +3,10 @@ package services;
 import domain.User;
 import storage.UserRepository;
 
+import java.util.Optional;
+
+import static exceptions.EntityNotExistException.*;
+
 public class AuthenticationService {
 
     UserRepository userRepository;
@@ -11,8 +15,8 @@ public class AuthenticationService {
         this.userRepository = userRepository;
     }
 
-    boolean isValid(User user) {
-        User validUser = userRepository.getUserByLogin(user.getLogin());
-        return validUser != null && validUser.getPassword().equals(user.getPassword());
+    boolean verifyUser(User user) {
+        Optional<User> validUser = userRepository.findById(user.getLogin());
+        return validUser.isPresent() && validUser.get().getPassword().equals(user.getPassword());
     }
 }
