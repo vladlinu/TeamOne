@@ -9,9 +9,9 @@ import storage.LessonRepository;
 
 import java.util.Set;
 
-import static exceptions.EntityNotExistException.*;
+import static exceptions.EntityNotExistException.groupIsNotExist;
 import static exceptions.EntityNotExistException.lessonIsNotExist;
-import static exceptions.PermissionException.*;
+import static exceptions.PermissionException.notEnoughPermission;
 
 public class LessonService {
 
@@ -35,12 +35,6 @@ public class LessonService {
 
         lesson.setHomework(homework);
         lessonRepository.update(lesson);
-    }
-
-    Lesson getLessonToEditPresence(Integer lessonId) throws IllegalArgumentException {
-        return lessonRepository
-                .findById(lessonId)
-                .orElseThrow(() -> lessonIsNotExist(lessonId));
     }
 
     void saveLesson(User caller, Lesson lesson) throws PermissionException {
@@ -87,6 +81,18 @@ public class LessonService {
         lessonRepository.update(lesson);
     }
 
+    Set<String> getPresence(User caller, Integer lessonId) {
+        Lesson lesson = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> lessonIsNotExist(lessonId));
+        return lesson.getPresentStudentLogins();
+    }
+
+    boolean isPresent(User caller, Integer lessonId, String userLogin) {
+        Lesson lesson = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> lessonIsNotExist(lessonId));
+        return lesson.isPresent(userLogin);
+    }
+
     private Lesson getLessonToEditPresence(User caller, Integer lessonId) throws PermissionException {
         Lesson lesson = lessonRepository.findById(lessonId)
                 .orElseThrow(() -> lessonIsNotExist(lessonId));
@@ -96,12 +102,6 @@ public class LessonService {
             throw notEnoughPermission(caller.getLogin());
         }
         return lesson;
-    }
-
-    Set<String> getPresence(User caller, Integer lessonId) {
-        Lesson lesson = lessonRepository.findById(lessonId)
-                .orElseThrow(() -> lessonIsNotExist(lessonId));
-        return lesson.getPresentStudentLogins();
     }
 
     private boolean isTeacherOrAdminOrGrouphead(User user, Group group, Lesson lesson) {

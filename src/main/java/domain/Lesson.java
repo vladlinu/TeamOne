@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.Set;
 
 @Data
@@ -18,25 +17,25 @@ public class Lesson {
     private String homework;
     private Integer groupId;
     private String teacherLogin;
-    private final Map<String, Boolean> isPresent;
+    private final Set<String> presents;
 
     public boolean isLessonTeacher(User user) {
         return user.isTeacher() && teacherLogin.equals(user.getLogin());
     }
 
     public boolean removePresent(String studentLogin) {
-        return isPresent.remove(studentLogin);
+        return presents.remove(studentLogin);
     }
 
     public void addPresent(String studentLogin) {
-        isPresent.put(studentLogin, true);
+        presents.add(studentLogin);
     }
 
     public boolean isPresent(String studentLogin) {
-        return isPresent.getOrDefault(studentLogin, false);
+        return presents.contains(studentLogin);
     }
 
     public Set<String> getPresentStudentLogins() {
-        return isPresent.keySet();
+        return presents;
     }
 }
