@@ -8,8 +8,8 @@ import storage.GroupRepository;
 import java.util.Optional;
 
 import static exceptions.EntityExistException.groupAlreadyExists;
-import static exceptions.EntityNotExistException.*;
-import static exceptions.PermissionException.*;
+import static exceptions.EntityNotExistException.groupIsNotExist;
+import static exceptions.PermissionException.notEnoughPermission;
 
 public class GroupService {
 
@@ -49,5 +49,9 @@ public class GroupService {
             throw groupIsNotExist(groupId);
         }
         groupRepository.deleteById(groupId);
+    }
+
+    public Optional<Group> findGroupByName(String groupName) {
+        return groupRepository.findGroupByName(groupName);
     }
 }

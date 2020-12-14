@@ -5,9 +5,11 @@ import domain.User;
 import exceptions.PermissionException;
 import storage.UserRepository;
 
-import static exceptions.EntityExistException.*;
+import java.util.Optional;
+
+import static exceptions.EntityExistException.userAlreadyExists;
 import static exceptions.EntityNotExistException.userIsNotExist;
-import static exceptions.PermissionException.*;
+import static exceptions.PermissionException.notEnoughPermission;
 
 public class UserService {
     private final UserRepository userRepository;
@@ -56,5 +58,9 @@ public class UserService {
         }
 
         userRepository.update(editedUser);
+    }
+
+    Optional<User> getUserByLogin(String login) {
+        return userRepository.findById(login);
     }
 }
