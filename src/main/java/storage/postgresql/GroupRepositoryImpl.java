@@ -96,7 +96,11 @@ public class GroupRepositoryImpl implements GroupRepository {
     public boolean existsById(Integer id) {
         String statement = "SELECT * FROM Groups WHERE id = " + id;
         ResultSet result = connector.executeStatement(statement);
-        return result != null;
+        try {
+            return result.next();
+        } catch (SQLException e) {
+            return false;
+        }
     }
 
     @Override
@@ -108,18 +112,22 @@ public class GroupRepositoryImpl implements GroupRepository {
             return Optional.empty();
         } else {
             try {
-                Integer id = result.getInt(1);
-                String groupHeadLogin = result.getString(3);
-                String getLoginsStatement = "SELECT login FROM Users WHERE group_id = " + id;
-                ResultSet resultLogins = connector.executeStatement(getLoginsStatement);
-                ArrayList<String> memberLogins = new ArrayList<>();
-                while(resultLogins.next()) {
-                    memberLogins.add(resultLogins.getString(1));
+                while (result.next()) {
+                    Integer id = (int) result.getLong("id");
+                    String groupHeadLogin = result.getString("grouphead_login");
+                    String getLoginsStatement = "SELECT login FROM Users WHERE group_id = " + id +
+                            " AND (user_type = 'student' OR user_type = 'group_head')";
+                    ResultSet resultLogins = connector.executeStatement(getLoginsStatement);
+                    ArrayList<String> memberLogins = new ArrayList<>();
+                    while(resultLogins.next()) {
+                        memberLogins.add(resultLogins.getString(1));
+                    }
+                    return Optional.of(new Group(id, name, groupHeadLogin, memberLogins));
                 }
-                return Optional.of(new Group(id, name, groupHeadLogin, memberLogins));
             } catch (SQLException e) {
                 return Optional.empty();
             }
         }
+        return Optional.empty();
     }
 }
