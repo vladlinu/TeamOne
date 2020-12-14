@@ -1,12 +1,15 @@
 package domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
+@AllArgsConstructor
 public class Lesson {
 
     private Integer lessonId;
@@ -23,11 +26,11 @@ public class Lesson {
     }
 
     public boolean removePresent(String studentLogin) {
-        return isPresent.remove(studentLogin);
+        return isPresent.replace(studentLogin, isPresent(studentLogin), false);
     }
 
     public void addPresent(String studentLogin) {
-        isPresent.put(studentLogin, true);
+        isPresent.replace(studentLogin, true);
     }
 
     public boolean isPresent(String studentLogin) {
@@ -35,6 +38,6 @@ public class Lesson {
     }
 
     public Set<String> getPresentStudentLogins() {
-        return isPresent.keySet();
+        return isPresent.keySet().stream().filter(this::isPresent).collect(Collectors.toSet());
     }
 }
