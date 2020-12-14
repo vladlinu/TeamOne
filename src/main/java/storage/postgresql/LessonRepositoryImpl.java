@@ -146,7 +146,7 @@ public class LessonRepositoryImpl implements LessonRepository {
 				String teacherLogin = lessonsSet.getString(7);
 
 				Map<String, Boolean> presentsForLesson = new HashMap<>();
-				Lesson lesson = new Lesson(id, dateTime, description, discipline, homework, Integer.valueOf(groupId), teacherLogin, presentsForLesson);
+				Lesson lesson = new Lesson(id, dateTime, description, discipline, homework, groupId, teacherLogin, presentsForLesson);
 
 
 				String getPresentsCommand = String.format("Select * FROM Presents WHERE lesson_id = %s", id);
@@ -196,7 +196,7 @@ public class LessonRepositoryImpl implements LessonRepository {
 				String teacherLogin = lessonsSet.getString(7);
 
 				Map<String, Boolean> presentsForLesson = new HashMap<>();
-				Lesson lesson = new Lesson(id, dateTime, description, discipline, homework, Integer.valueOf(groupId), teacherLogin, presentsForLesson);
+				Lesson lesson = new Lesson(id, dateTime, description, discipline, homework, groupId, teacherLogin, presentsForLesson);
 
 				String getPresentsCommand = String.format("Select * FROM Presents WHERE lesson_id = %s", id);
 
