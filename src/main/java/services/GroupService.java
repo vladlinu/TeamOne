@@ -5,6 +5,7 @@ import domain.User;
 import exceptions.PermissionException;
 import storage.GroupRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 import static exceptions.EntityExistException.groupAlreadyExists;
@@ -52,5 +53,9 @@ public class GroupService {
 
     public Optional<Group> findGroupByName(String groupName) {
         return groupRepository.findGroupByName(groupName);
+    }
+
+    public List<String> getGroupMembers(Integer id) {
+        return groupRepository.findById(id).orElseThrow(() -> groupIsNotExist(id)).getMemberLogins();
     }
 }

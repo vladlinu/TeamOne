@@ -6,9 +6,13 @@ import domain.UserType;
 import exceptions.EntityExistException;
 import exceptions.EntityNotExistException;
 import exceptions.PermissionException;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import storage.GroupRepository;
+
+import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
@@ -21,12 +25,12 @@ public class GroupServiceTest {
     private Group group;
 
     @Before
-    public void initService() {
+    public void setUp() {
         mockedRepo = mock(GroupRepository.class);
         service = new GroupService(mockedRepo);
         student = new User("max", "1234", "Maxim Perevalov", UserType.STUDENT, 0);
         admin = new User("vova", "1234", "Vova Pomidor", UserType.ADMIN, 0);
-        group = new Group(1, "IP-94", "max");
+        group = new Group(1, "IP-94", "max", List.of("Vania", "Oleg", "Vladimir"));
     }
 
     @Test(expected = PermissionException.class)
@@ -96,6 +100,29 @@ public class GroupServiceTest {
     }
 
     @Test
+    public void findNotExistsGroupByName() {
+        when(mockedRepo.findGroupByName(group.getName())).thenReturn(Optional.empty());
+        Optional<Group> groupByName = service.findGroupByName(group.getName());
+        Assert.assertFalse(groupByName.isPresent());
+    }
+
+    @Test
     public void findGroupByName() {
+        when(mockedRepo.findGroupByName(group.getName())).thenReturn(Optional.of(group));
+        Optional<Group> groupByName = service.findGroupByName(group.getName());
+        Assert.assertTrue(groupByName.isPresent());
+    }
+
+    @Test(expected = EntityNotExistException.class)
+    public void getNotExistsGroupMembers() {
+        when(mockedRepo.findById(group.getId())).thenReturn(Optional.empty());
+        service.getGroupMembers(group.getId());
+    }
+
+    @Test
+    public void getGroupMembers() {
+        when(mockedRepo.findById(group.getId())).thenReturn(Optional.of(group));
+        List<String> groupMembers = service.getGroupMembers(group.getId());
+        Assert.assertEquals(group.getMemberLogins(), groupMembers);
     }
 }
