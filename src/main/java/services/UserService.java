@@ -2,75 +2,65 @@ package services;
 
 
 import domain.User;
-import domain.UserType;
+import exceptions.PermissionException;
 import storage.UserRepository;
+
+import java.util.Optional;
+
+import static exceptions.EntityExistException.userAlreadyExists;
+import static exceptions.EntityNotExistException.userIsNotExist;
+import static exceptions.PermissionException.notEnoughPermission;
 
 public class UserService {
     private final UserRepository userRepository;
-    private final AuthenticationService authenticationService;
 
-    public UserService(UserRepository userRepository, AuthenticationService authenticationService) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.authenticationService = authenticationService;
     }
 
-    boolean addAccount(User caller, String login, String name, UserType userType, String password, Integer groupId) {
-        if (!(authenticationService.isValid(caller) && caller.getUserType() == UserType.ADMIN)) {
-            return false;
+    void saveNewUser(User caller, User newUser) throws PermissionException {
+        if (!caller.isAdmin()) {
+            throw notEnoughPermission(caller);
         }
-        try {
-            userRepository.addAccount(login, name, userType, password, groupId);
-            return true;
-        } catch (Exception ex) {
-            return false;
+        if (userRepository.existsById(newUser.getLogin())) {
+            throw userAlreadyExists(newUser);
         }
+        userRepository.saveNewEntity(newUser);
     }
 
-    boolean deleteAccount(User caller, String login) {
-        if (!(authenticationService.isValid(caller) && caller.getUserType() == UserType.ADMIN)) {
-            return false;
+    void deleteUser(User caller, String login) throws PermissionException {
+        if (!caller.isAdmin()) {
+            throw notEnoughPermission(caller);
         }
-        try {
-            userRepository.deleteAccount(login);
-            return true;
-        } catch (Exception ex) {
-            return false;
+        if (!userRepository.existsById(login)) {
+            throw userIsNotExist(login);
         }
+        userRepository.deleteById(login);
     }
 
-    boolean changeAccountType(User caller, String login, UserType newType) {
-        if (!(authenticationService.isValid(caller) && caller.getUserType() == UserType.ADMIN)) {
-            return false;
+    void editUser(User caller, User editedUser) throws PermissionException {
+        boolean callerIsUser = caller.getLogin().equals(editedUser.getLogin());
+        boolean callerIsAdmin = caller.isAdmin();
+
+        if (!(callerIsAdmin || callerIsUser)) {
+            throw notEnoughPermission(caller);
         }
-        try {
-            userRepository.changeAccountType(login, newType);
-            return true;
-        } catch (Exception ex) {
-            return false;
+
+        User user = userRepository.findById(editedUser.getLogin())
+                .orElseThrow(() -> userIsNotExist(editedUser));
+
+        boolean typeIsChanged = !user.getUserType().equals(editedUser.getUserType());
+        boolean loginIsChanged = !user.getLogin().equals(editedUser.getLogin());
+        boolean groupIdIsChanged = !user.getGroupId().equals(editedUser.getGroupId());
+
+        if ((typeIsChanged || loginIsChanged || groupIdIsChanged) && !callerIsAdmin) {
+            throw notEnoughPermission(caller);
         }
+
+        userRepository.update(editedUser);
     }
 
-    boolean changeAccountGroup(User caller, String login, Integer newGroupId) {
-        if (!(authenticationService.isValid(caller) && caller.getUserType() == UserType.ADMIN)) {
-            return false;
-        }
-        try {
-            userRepository.changeAccountGroup(login, newGroupId);
-            return true;
-        } catch (Exception ex) {
-            return false;
-        }
-    }
-
-    boolean changeAccountPassword(User caller, String login, String newPassword) {
-        if (!(authenticationService.isValid(caller) && caller.getUserType() == UserType.ADMIN)) {
-            return false;
-        }
-        try {
-            userRepository.changeAccountPassword(login, newPassword);
-            return true;
-        } catch (Exception ex) {
-            return false;
-        }
+    Optional<User> getUserByLogin(String login) {
+        return userRepository.findById(login);
     }
 }

@@ -1,9 +1,12 @@
 package domain;
 
+import lombok.Data;
+
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Set;
 
+@Data
 public class Lesson {
 
     private Integer lessonId;
@@ -15,15 +18,8 @@ public class Lesson {
     private String teacherLogin;
     private final Map<String, Boolean> isPresent;
 
-    public Lesson(Integer lessonId, LocalDateTime dateTime, String description, String discipline, String homework, Integer groupId, String teacherLogin, Map<String, Boolean> isPresent) {
-        this.lessonId = lessonId;
-        this.dateTime = dateTime;
-        this.description = description;
-        this.discipline = discipline;
-        this.homework = homework;
-        this.groupId = groupId;
-        this.teacherLogin = teacherLogin;
-        this.isPresent = isPresent;
+    public boolean isLessonTeacher(User user) {
+        return user.isTeacher() && teacherLogin.equals(user.getLogin());
     }
 
     public boolean removePresent(String studentLogin) {
@@ -40,61 +36,5 @@ public class Lesson {
 
     public Set<String> getPresentStudentLogins() {
         return isPresent.keySet();
-    }
-
-    public Integer getLessonId() {
-        return lessonId;
-    }
-
-    public void setLessonId(Integer lessonId) {
-        this.lessonId = lessonId;
-    }
-
-    public LocalDateTime getDateTime() {
-        return dateTime;
-    }
-
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getDiscipline() {
-        return discipline;
-    }
-
-    public void setDiscipline(String discipline) {
-        this.discipline = discipline;
-    }
-
-    public String getHomework() {
-        return homework;
-    }
-
-    public void setHomework(String homework) {
-        this.homework = homework;
-    }
-
-    public Integer getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(Integer groupId) {
-        this.groupId = groupId;
-    }
-
-    public String getTeacherLogin() {
-        return teacherLogin;
-    }
-
-    public void setTeacherLogin(String teacherLogin) {
-        this.teacherLogin = teacherLogin;
     }
 }
