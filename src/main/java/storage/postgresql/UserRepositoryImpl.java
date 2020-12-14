@@ -48,8 +48,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public boolean existsById(String login) {
-        String statement = "EXISTS (SELECT * FROM Users WHERE login = '"
-                + login + "')";
+        String statement = "SELECT * FROM Users WHERE login = '" + login + "'";
         ResultSet result = connector.executeStatement(statement);
         return result != null;
     }
