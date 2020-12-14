@@ -3,7 +3,6 @@ package storage.postgresql;
 import domain.User;
 import domain.UserType;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import storage.UserRepository;
 
 import java.sql.ResultSet;
@@ -11,11 +10,10 @@ import java.util.HashMap;
 import java.util.Optional;
 
 
-@Data
 @AllArgsConstructor
 public class UserRepositoryImpl implements UserRepository {
 
-    public Connector connector;
+    private Connector connector;
     private final HashMap<UserType, String> convertUserTypeForm = init();
 
     @Override
