@@ -32,6 +32,7 @@ public class Connector {
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(command);
+            statement.close();
             return resultSet;
         } catch (SQLException ex) {
             System.out.println(ex);
