@@ -27,6 +27,46 @@ public class GroupRepositoryImplTest {
     }
 
     @Test
+    public void saveNewEntity() {
+        Group group1 = new Group(null, "IP-94", "vasya092", List.of());
+        Group group2 = new Group(10, "10th Group", "kolya073", List.of());
+        Integer groupId1 = group1.getId();
+        Integer groupId2 = group2.getId();
+        Group savedGroup1 = repository.saveNewEntity(group1);
+        Group savedGroup2 = repository.saveNewEntity(group2);
+
+        assertNotEquals(groupId1, savedGroup1.getId());
+        assertNotEquals(groupId2, savedGroup2.getId());
+
+        repository.deleteById(groupId1);
+        repository.deleteById(groupId2);
+    }
+
+    @Test
+    public void findById() {
+        Integer id1 = 1;
+        Optional<Group> groupById1 = repository.findById(id1);
+        assertTrue(groupById1.isPresent());
+
+        Integer id2 = -3;
+        Optional<Group> groupById2 = repository.findById(id2);
+        assertFalse(groupById2.isPresent());
+    }
+
+    @Test
+    public void findAll() {
+        Iterable<Group> groups = repository.findAll();
+        assertNotNull(groups);
+    }
+
+    @Test
+    public void deleteById() {
+        Group group = repository.saveNewEntity(new Group(null, "Deleted Group", "wqa092", List.of()));
+        repository.deleteById(group.getId());
+        assertFalse(repository.existsById(group.getId()));
+    }
+
+    @Test
     public void existsById() {
         boolean isGroupExist1 = repository.existsById(1);
         boolean isGroupExist2 = repository.existsById(2);
