@@ -37,7 +37,7 @@ public class LessonServiceTest {
         admin = new User("vova", "1234", "Vova Pomidor", UserType.ADMIN, 0);
         group = new Group(1, "IP-94", "max", List.of("Vania", "Oleg", "Vladimir"));
         teacher = new User("Olesnadr", "1234", "Саша", UserType.TEACHER, 0);
-        lesson = new Lesson(0, LocalDateTime.now(), "Good lesson", "English", "do nothing", 0, teacher.getLogin(), new HashSet<>(Set.of("max")));
+        lesson = new Lesson(0, LocalDateTime.now(), "Good lesson", "English", "do nothing", 0, teacher.getLogin(), new HashMap<>(Map.of("max", true)));
     }
 
     @Test(expected = EntityNotExistException.class)
@@ -122,7 +122,7 @@ public class LessonServiceTest {
         when(mockedGroupRepo.findById(lesson.getGroupId())).thenReturn(Optional.of(group));
         when(mockedLessonRepo.findById(lesson.getLessonId())).thenReturn(Optional.of(lesson));
         service.removeStudentPresence(caller, lesson.getLessonId(), student.getLogin());
-        assertEquals(Collections.emptySet(), lesson.getPresents());
+        assertEquals(Collections.emptySet(), lesson.getPresentStudentLogins());
         verify(mockedLessonRepo, times(1)).update(lesson);
     }
 
@@ -133,7 +133,7 @@ public class LessonServiceTest {
         when(mockedGroupRepo.findById(lesson.getGroupId())).thenReturn(Optional.of(group));
         when(mockedLessonRepo.findById(lesson.getLessonId())).thenReturn(Optional.of(lesson));
         service.addStudentPresence(caller, lesson.getLessonId(), student.getLogin());
-        assertEquals(Set.of(student.getLogin()), lesson.getPresents());
+        assertEquals(Set.of(student.getLogin()), lesson.getPresentStudentLogins());
         verify(mockedLessonRepo, times(1)).update(lesson);
     }
 
@@ -144,6 +144,6 @@ public class LessonServiceTest {
         when(mockedGroupRepo.findById(lesson.getGroupId())).thenReturn(Optional.of(group));
         when(mockedLessonRepo.findById(lesson.getLessonId())).thenReturn(Optional.of(lesson));
         Set<String> presence = service.getPresence(caller, lesson.getLessonId());
-        assertEquals(lesson.getPresents(), presence);
+        assertEquals(lesson.getPresentStudentLogins(), presence);
     }
 }
