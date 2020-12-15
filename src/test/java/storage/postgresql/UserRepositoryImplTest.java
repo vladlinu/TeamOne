@@ -134,29 +134,27 @@ public class UserRepositoryImplTest {
 	public void update() throws SQLException {
 		User user1 = new User("fsf1467", "123sacQW@asd", "Josepe S.A.", UserType.GROUP_HEAD, 3);
 		repository.update(user1);
-		String statement1 = "SELECT * FROM Groups WHERE name = 'Josepe S.A.'";
+		String statement1 = "SELECT * FROM Users WHERE name = 'Josepe S.A.'";
 		ResultSet result1 = connector.executeStatement(statement1);
-		while (result1.next()) {
-			assertEquals(result1.getString("login"), "fsf1467");
-			assertEquals(result1.getString("name"), "Josepe S.A.");
-			assertEquals(result1.getInt("group_id"), 3);
-			assertEquals(result1.getString("user_type"), "group_head");
-			assertEquals(result1.getString("password_hash"), "123sacQW@asd");
-			assertEquals(result1.getString("password_salt"), "123sacQW@asd");
-		}
+		assertTrue(result1.next());
+		assertEquals(result1.getString("login"), "fsf1467");
+		assertEquals(result1.getString("name"), "Josepe S.A.");
+		assertEquals(result1.getInt("group_id"), 3);
+		assertEquals(result1.getString("user_type"), "group_head");
+		assertEquals(result1.getString("password_hash"), "123sacQW@asd");
+		assertEquals(result1.getString("password_salt"), "123sacQW@asd");
 
-		User user2 = new User("julius44", "12QW@asd", "NoName", UserType.STUDENT, null);
-		repository.update(user1);
-		String statement2 = "SELECT * FROM Groups WHERE name = 'NoName'";
+		User user2 = new User("sssya092", "12QW@asd", "NoName", UserType.GROUP_HEAD, 2);
+		repository.update(user2);
+		String statement2 = "SELECT * FROM Users WHERE name = 'NoName'";
 		ResultSet result2 = connector.executeStatement(statement2);
-		while (result2.next()) {
-			assertEquals(result2.getString("login"), "julius44");
-			assertEquals(result2.getString("name"), "NoName");
-			assertEquals(result2.getInt("group_id"), "NULL");
-			assertEquals(result2.getString("user_type"), "student");
-			assertEquals(result2.getString("password_hash"), "12QW@asd");
-			assertEquals(result2.getString("password_salt"), "12QW@asd");
-		}
+		assertTrue(result2.next());
+		assertEquals(result2.getString("login"), "sssya092");
+		assertEquals(result2.getString("name"), "NoName");
+		assertEquals(result2.getInt("group_id"), 2);
+		assertEquals(result2.getString("user_type"), "group_head");
+		assertEquals(result2.getString("password_hash"), "12QW@asd");
+		assertEquals(result2.getString("password_salt"), "12QW@asd");
 	}
 
 	@After
