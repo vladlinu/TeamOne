@@ -11,10 +11,10 @@ public class Group {
 
     private Integer id;
     private String name;
-    private String groupHeadLogin;
-    private List<String> memberLogins;
+    private User groupHead;
+    private List<User> members;
 
     public boolean isGrouphead(User user) {
-        return user.isGrouphead() && user.getLogin().equals(groupHeadLogin);
+        return user.isGrouphead();
     }
 }

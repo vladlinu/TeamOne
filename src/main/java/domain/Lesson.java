@@ -17,12 +17,12 @@ public class Lesson {
     private String description;
     private String discipline;
     private String homework;
-    private Integer groupId;
-    private String teacherLogin;
+    private Group group;
+    private User teacher;
     private final Map<String, Boolean> isPresent;
 
     public boolean isLessonTeacher(User user) {
-        return user.isTeacher() && teacherLogin.equals(user.getLogin());
+        return user.isTeacher();
     }
 
     public boolean removePresent(String studentLogin) {

@@ -5,11 +5,9 @@ import storage.LessonRepository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -112,7 +110,7 @@ public class LessonRepositoryImpl implements LessonRepository {
 		String statement = "INSERT INTO Lessons VALUES('" + entity.getLessonId() +
 				"', '" + entity.getDateTime() + "', '" + entity.getDescription() +
 				"', '" + entity.getHomework() + "', '" + entity.getDiscipline() +
-				"', '" + entity.getTeacherLogin() + "', '" + entity.getGroupId() + "')";
+				"', '" + entity.getTeacher() + "', '" + entity.getGroup() + "')";
 		ResultSet result = connector.executeStatement(statement);
 		try {
 			Integer id = result.getInt(0);
@@ -222,9 +220,9 @@ public class LessonRepositoryImpl implements LessonRepository {
 		Integer id = entity.getLessonId();
 		String homework = entity.getHomework();
 		String discipline = entity.getDiscipline();
-		Integer groupId = entity.getGroupId();
+		Integer groupId = entity.getGroup();
 		String description = entity.getDescription();
-		String teacherLogin = entity.getTeacherLogin();
+		String teacherLogin = entity.getTeacher();
 
 		String updateLessonCommand = String.format("UPDATE Lessons SET date = date '%s', time = time '%s', homework = '%s', discipline = '%s', group_id = %s, description = '%s', teacher_login = '%s' WHERE id = %s",
 				date, time, homework, discipline, groupId, description, teacherLogin, id);

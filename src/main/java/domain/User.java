@@ -11,7 +11,7 @@ public class User {
     private String password;
     private String name;
     private UserType userType;
-    private Integer groupId;
+    private Group group;
 
     public boolean isAdmin() {
         return userType == UserType.ADMIN;

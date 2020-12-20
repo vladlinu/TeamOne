@@ -1,7 +1,6 @@
 package storage.postgresql;
 
 import domain.Lesson;
-import domain.User;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -121,9 +120,9 @@ public class LessonRepositoryImplTest {
         assertEquals("2020-11-16T08:30", lesson1.getDateTime().toString());
         assertNull(lesson1.getHomework());
         assertEquals("Mathematics", lesson1.getDiscipline());
-        assertEquals(Integer.valueOf(1), lesson1.getGroupId());
+        assertEquals(Integer.valueOf(1), lesson1.getGroup());
         assertNull(lesson1.getDescription());
-        assertEquals("upa1221", lesson1.getTeacherLogin());
+        assertEquals("upa1221", lesson1.getTeacher());
 
         assertTrue(lesson1.getIsPresent().get("vasya092"));
         assertTrue(lesson1.getIsPresent().get("wqa092"));
@@ -136,9 +135,9 @@ public class LessonRepositoryImplTest {
         assertEquals("2020-11-16T08:05", lesson1.getDateTime().toString());
         assertNull(lesson1.getHomework());
         assertEquals("Databases", lesson1.getDiscipline());
-        assertEquals(Integer.valueOf(1), lesson1.getGroupId());
+        assertEquals(Integer.valueOf(1), lesson1.getGroup());
         assertNull(lesson1.getDescription());
-        assertEquals("upa1221", lesson1.getTeacherLogin());
+        assertEquals("upa1221", lesson1.getTeacher());
 
         assertTrue(lesson1.getIsPresent().get("vasya092"));
         assertTrue(lesson1.getIsPresent().get("wqa092"));
@@ -161,9 +160,9 @@ public class LessonRepositoryImplTest {
         assertEquals("2020-11-16T08:30", lesson1.getDateTime().toString());
         assertNull(lesson1.getHomework());
         assertEquals("Mathematics", lesson1.getDiscipline());
-        assertEquals(Integer.valueOf(1), lesson1.getGroupId());
+        assertEquals(Integer.valueOf(1), lesson1.getGroup());
         assertNull(lesson1.getDescription());
-        assertEquals("upa1221", lesson1.getTeacherLogin());
+        assertEquals("upa1221", lesson1.getTeacher());
 
         assertTrue(lesson1.getIsPresent().get("vasya092"));
         assertTrue(lesson1.getIsPresent().get("wqa092"));
@@ -176,9 +175,9 @@ public class LessonRepositoryImplTest {
         assertEquals("2020-11-16T08:05", lesson1.getDateTime().toString());
         assertNull(lesson1.getHomework());
         assertEquals("Databases", lesson1.getDiscipline());
-        assertEquals(Integer.valueOf(1), lesson1.getGroupId());
+        assertEquals(Integer.valueOf(1), lesson1.getGroup());
         assertNull(lesson1.getDescription());
-        assertEquals("upa1221", lesson1.getTeacherLogin());
+        assertEquals("upa1221", lesson1.getTeacher());
 
         assertTrue(lesson1.getIsPresent().get("vasya092"));
         assertTrue(lesson1.getIsPresent().get("wqa092"));
@@ -245,9 +244,9 @@ public class LessonRepositoryImplTest {
         assertEquals("2020-11-16T08:30", lesson1.getDateTime().toString());
         assertNull(lesson1.getHomework());
         assertEquals("Mathematics", lesson1.getDiscipline());
-        assertEquals(Integer.valueOf(1), lesson1.getGroupId());
+        assertEquals(Integer.valueOf(1), lesson1.getGroup());
         assertNull(lesson1.getDescription());
-        assertEquals("upa1221", lesson1.getTeacherLogin());
+        assertEquals("upa1221", lesson1.getTeacher());
 
         assertTrue(lesson1.getIsPresent().get("vasya092"));
         assertTrue(lesson1.getIsPresent().get("wqa092"));
@@ -260,9 +259,9 @@ public class LessonRepositoryImplTest {
         assertEquals("2020-11-16T09:05", lesson1.getDateTime().toString());
         assertEquals("lab5", lesson1.getHomework());
         assertEquals("OOP", lesson1.getDiscipline());
-        assertEquals(Integer.valueOf(2), lesson1.getGroupId());
+        assertEquals(Integer.valueOf(2), lesson1.getGroup());
         assertNull(lesson1.getDescription());
-        assertEquals("directoria1", lesson1.getTeacherLogin());
+        assertEquals("directoria1", lesson1.getTeacher());
 
         assertTrue(lesson1.getIsPresent().get("sssya092"));
         assertTrue(lesson1.getIsPresent().get("dominat00"));
