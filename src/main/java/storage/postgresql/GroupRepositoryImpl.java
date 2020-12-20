@@ -2,6 +2,7 @@ package storage.postgresql;
 
 import domain.Group;
 import domain.User;
+import domain.UserType;
 import lombok.AllArgsConstructor;
 import storage.GroupRepository;
 import storage.UserRepository;
@@ -81,8 +82,25 @@ public class GroupRepositoryImpl implements GroupRepository {
                 String name = result.getString(2);
                 String getLoginsStatement = "SELECT login FROM Users WHERE group_id = " + id +
                         " AND (user_type = 'student' OR user_type = 'group_head')";
-                ResultSet resultLogins = connector.executeStatement(getLoginsStatement);
-                Optional<Group> group = getGroup(id, resultLogins, name);
+                ResultSet resultMembers = connector.executeStatement(getLoginsStatement);
+                String groupHeadLogin = null;
+                ArrayList<User> members = new ArrayList<>();
+                while(resultMembers.next()) {
+                    Optional<User> member = userRepository.findById(resultMembers.getString(1));
+                    if (member.isPresent()) {
+                        User user = member.get();
+                        if (user.getUserType() == UserType.GROUP_HEAD) {
+                            groupHeadLogin = user.getLogin();
+                        }
+                        members.add(user);
+                    }
+                }
+                User groupHead = null;
+                Optional<User> groupHeadOptional = userRepository.findById(groupHeadLogin);
+                if (groupHeadOptional.isPresent()) {
+                    groupHead = groupHeadOptional.get();
+                }
+                Optional<Group> group = Optional.of(new Group(id, name, groupHead, members));
                 group.ifPresent(groupList::add);
             }
         } catch (SQLException exception) {
@@ -130,7 +148,7 @@ public class GroupRepositoryImpl implements GroupRepository {
             return Optional.empty();
         } else {
             try {
-                while (result.next()) {
+                if (result.next()) {
                     Integer id = (int) result.getLong("id");
                     return getGroup(id, result, name);
                 }
