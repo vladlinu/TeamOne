@@ -22,7 +22,7 @@ public class UserRepositoryImplTest {
 	@Before
 	public void setUp() {
 		Connector.Builder builder = new Connector.Builder();
-		builder.setUrl("jdbc:postgresql://localhost:5432/experiment").setUser("postgres").setPassword("root");
+		builder.setUrl("jdbc:postgresql://localhost:5433/experiment").setUser("postgres").setPassword("root");
 
 		connector = new Connector(builder);
 		connector.getConnection();
@@ -32,83 +32,44 @@ public class UserRepositoryImplTest {
 	@Test
 	public void saveNewEntity() {
 		User user1 = new User("login1", "12345", "Lasfasc", UserType.STUDENT, 1);
-		User user2 = new User("login2", "12345", "Aafasdc", UserType.TEACHER, null);
-		User user3 = new User("login1", "12345", "Lasfasc", UserType.STUDENT, 1);
-		User saveNewUser1 = repository.saveNewEntity(user1);
-		User saveNewUser2 = repository.saveNewEntity(user2);
-		User saveNewUser3 = repository.saveNewEntity(user3);
-		assertEquals(saveNewUser1, user1);
-		assertEquals(saveNewUser2, user2);
-		assertEquals(saveNewUser3, user3);
+		User user2 = new User("login1234", "12345", "Aafasdc", UserType.TEACHER, 2);
+		repository.saveNewEntity(user1);
+		repository.saveNewEntity(user2);
+		assertTrue(repository.existsById(user1.getLogin()));
+		assertTrue(repository.existsById(user2.getLogin()));
 	}
 
 	@Test
 	public void findById() {
-		Optional<User> user1 = repository.findById("wqa092");
+		Optional<User> user1 = repository.findById("vasya092");
 		assertTrue(user1.isPresent());
 
-		Optional<User> user2 = repository.findById("julius44");
-		assertTrue(user2.isPresent());
+		Optional<User> user2 = repository.findById("asdasdasdasd");
+		assertFalse(user2.isPresent());
 	}
 
 	@Test
 	public void findAll() {
 		ArrayList<User> findAll = (ArrayList<User>) repository.findAll();
-		ArrayList<User> userList = new ArrayList<>();
-		userList.add(new User("vasya092", "dssdfds1124", "Ivaniuk V.O.", UserType.GROUP_HEAD, 1));
-		userList.add(new User("dominar3000", "d23rfw124", "Naluvayko R.I.", UserType.STUDENT, 1));
-		userList.add(new User("wqa092", "sdfhsdfdsf124", "Pokolyuk W.K.", UserType.STUDENT, 1));
-		userList.add(new User("eeesya092", "ds34tertd4", "Ivanko K.O.", UserType.STUDENT, 1));
+		User user1 = new User("vasya092", "dssdfds1124", "Ivaniuk V.O.", UserType.GROUP_HEAD, 1);
+		User user2 = new User("dominar3000", "d23rfw124", "Naluvayko R.I.", UserType.STUDENT, 1);
+		User user3 = new User("wqa092", "sdfhsdfdsf124", "Pokolyuk W.K.", UserType.STUDENT, 1);
+		User user4 = new User("eeesya092", "ds34tertd4", "Ivanko K.O.", UserType.STUDENT, 1);
+		User user5 = new User("12edasfaa", "12345", "12345", UserType.ADMIN, null);
 
-		userList.add(new User("sssya092", "dssdfdffs1124", "Ivator V.O.", UserType.GROUP_HEAD, 2));
-		userList.add(new User("dominat00", "d2ff3rfw124", "Nalutol R.I.", UserType.STUDENT, 2));
-		userList.add(new User("wireas34", "sdfhsdsdfdsf124", "Zelensky P.P.", UserType.STUDENT, 2));
-		userList.add(new User("va9rkw2", "dssdfdertd4", "Ilonov K.E.", UserType.STUDENT, 2));
-
-		userList.add(new User("fsf1467", "dssdfds1124", "Josepe S.A.", UserType.GROUP_HEAD, 3));
-		userList.add(new User("nsddw002", "d23rfw124", "Naluvayko R.I.", UserType.STUDENT, 3));
-		userList.add(new User("port92", "sdfhsdfdsf124", "Pokolyuk W.K.", UserType.STUDENT, 3));
-		userList.add(new User("kolya073", "ds34tertd4", "Ivanko K.O.", UserType.STUDENT, 3));
-
-		userList.add(new User("upa1221", "kwev3es", "Bandera S.A.", UserType.TEACHER, null));
-		userList.add(new User("directoria1", "f;owejg89", "Petliura S.V.", UserType.TEACHER, null));
-
-		userList.add(new User("julius44", "ADAsdas!3!@!#asd", "Julius Caesar", UserType.ADMIN, null));
-		userList.add(new User("napoleon123", "123SA@q231", "Napoleon Bonaparte", UserType.ADMIN, null));
-
-		userList.add(new User("login1", "12345", "Lasfasc", UserType.STUDENT, 1));
-		userList.add(new User("login2", "12345", "Aafasdc", UserType.TEACHER, null));
-		userList.add(new User("login1", "12345", "Lasfasc", UserType.STUDENT, 1));
-
-		assertEquals(findAll, userList);
+		assertTrue(findAll.contains(user1));
+		assertTrue(findAll.contains(user2));
+		assertTrue(findAll.contains(user3));
+		assertTrue(findAll.contains(user4));
+		assertFalse(findAll.contains(user5));
 	}
 
 	@Test
 	public void deleteById() {
-		try {
-			String userLogin = "vasya092";
-			repository.deleteById(userLogin);
-			ResultSet resultSet = connector.executeStatement(String.format("SELECT * FROM Lessons WHERE id = %s", userLogin));
-			assertFalse(resultSet.next());
-
-			userLogin = "dominat00";
-			repository.deleteById(userLogin);
-			resultSet = connector.executeStatement(String.format("SELECT * FROM Lessons WHERE id = %s", userLogin));
-			assertFalse(resultSet.next());
-
-			userLogin = "port92";
-			repository.deleteById(userLogin);
-			resultSet = connector.executeStatement(String.format("SELECT * FROM Lessons WHERE id = %s", userLogin));
-			assertFalse(resultSet.next());
-
-			userLogin = "adf122ewds";
-			repository.deleteById(userLogin);
-			resultSet = connector.executeStatement(String.format("SELECT * FROM Lessons WHERE id = %s", userLogin));
-			assertFalse(resultSet.next());
-
-		} catch (SQLException ex) {
-			ex.printStackTrace();
-		}
+		User user1 = new User("test", "123", "1 2 3", UserType.STUDENT, 1);
+		repository.saveNewEntity(user1);
+		repository.deleteById(user1.getLogin());
+		assertFalse(repository.existsById(user1.getLogin()));
 	}
 
 	@Test
