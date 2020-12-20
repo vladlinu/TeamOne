@@ -27,11 +27,11 @@ public class UserServiceTest {
     public void setUp() {
         mockedRepo = mock(UserRepository.class);
         service = new UserService(mockedRepo);
-        student = new User("max", "1234", "Maxim Perevalov", UserType.STUDENT, group);
+        student = new User("max", "1234", "Maxim Perevalov", UserType.STUDENT, 0);
         group = new Group(1, "IP-94", student, List.of(
-                new User("vania", "1234", "Vania", UserType.STUDENT, group),
-                new User("oleg", "1234", "Oleg", UserType.STUDENT, group),
-                new User("vladimir", "1234", "Vladimir", UserType.STUDENT, group)
+                new User("vania", "1234", "Vania", UserType.STUDENT, 0),
+                new User("oleg", "1234", "Oleg", UserType.STUDENT, 0),
+                new User("vladimir", "1234", "Vladimir", UserType.STUDENT, 0)
         ));
 
         admin = new User("vova", "1234", "Vova Pomidor", UserType.ADMIN, null);
@@ -61,8 +61,8 @@ public class UserServiceTest {
     @Test(expected = PermissionException.class)
     public void editUserTypeByNotAdmin() throws PermissionException {
         User caller = student;
-        User user = new User("kola", "1234", "Lexa", UserType.TEACHER, group);
-        User newUser = new User("kola", "1234", "Lexa", UserType.GROUP_HEAD, group);
+        User user = new User("kola", "1234", "Lexa", UserType.TEACHER, 0);
+        User newUser = new User("kola", "1234", "Lexa", UserType.GROUP_HEAD, 0);
         when(mockedRepo.findById(user.getLogin())).thenReturn(Optional.of(user));
         service.editUser(caller, newUser);
     }

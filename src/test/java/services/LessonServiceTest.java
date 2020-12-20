@@ -32,11 +32,11 @@ public class LessonServiceTest {
     public void setUp() {
         mockedLessonRepo = mock(LessonRepository.class);
         mockedGroupRepo = mock(GroupRepository.class);
-        student = new User("max", "1234", "Maxim Perevalov", UserType.STUDENT, group);
+        student = new User("max", "1234", "Maxim Perevalov", UserType.STUDENT, 0);
         group = new Group(1, "IP-94", student, List.of(
-                new User("vania", "1234", "Vania", UserType.STUDENT, group),
-                new User("oleg", "1234", "Oleg", UserType.STUDENT, group),
-                new User("vladimir", "1234", "Vladimir", UserType.STUDENT, group)
+                new User("vania", "1234", "Vania", UserType.STUDENT, 0),
+                new User("oleg", "1234", "Oleg", UserType.STUDENT, 0),
+                new User("vladimir", "1234", "Vladimir", UserType.STUDENT, 0)
         ));
         service = new LessonService(mockedLessonRepo, mockedGroupRepo);
         admin = new User("vova", "1234", "Vova Pomidor", UserType.ADMIN, null);
