@@ -51,7 +51,7 @@ public class UserService {
 
         boolean typeIsChanged = !user.getUserType().equals(editedUser.getUserType());
         boolean loginIsChanged = !user.getLogin().equals(editedUser.getLogin());
-        boolean groupIdIsChanged = !user.getGroup().equals(editedUser.getGroup());
+        boolean groupIdIsChanged = !user.getGroupId().equals(editedUser.getGroupId());
 
         if ((typeIsChanged || loginIsChanged || groupIdIsChanged) && !callerIsAdmin) {
             throw notEnoughPermission(caller);
