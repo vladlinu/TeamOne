@@ -4,9 +4,10 @@ import domain.Group;
 import domain.Lesson;
 import domain.User;
 import domain.UserType;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import storage.GroupRepository;
+import storage.UserRepository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,11 +19,15 @@ import java.util.HashMap;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class LessonRepositoryImplTest {
 
     private Connector connector;
     private LessonRepositoryImpl repository;
+    private UserRepository userRepository;
+    private GroupRepository groupRepository;
 
     @Before
     public void setUp() {
@@ -34,7 +39,9 @@ public class LessonRepositoryImplTest {
         connector = new Connector(builder);
         connector.getConnection();
 
-        repository = new LessonRepositoryImpl(connector);
+        userRepository = mock(UserRepository.class);
+        groupRepository = mock(GroupRepository.class);
+        repository = new LessonRepositoryImpl(connector, userRepository, groupRepository);
 
         connector.executeStatement("DROP TABLE IF EXISTS Lessons, Presents, Groups, Users");
 
@@ -110,6 +117,11 @@ public class LessonRepositoryImplTest {
 
     @Test
     public void findLessonsByGroupIdFromInterval() {
+        when(userRepository.findById("upa1221")).thenReturn(Optional.of(new User("upa1221", "235242",
+                "Teacher name", UserType.TEACHER, null)));
+
+        when(groupRepository.findById(1)).thenReturn(Optional.of(new Group(1, "First Group",
+                new User("vasya092", "2423", "Vasha", UserType.GROUP_HEAD, 1), new ArrayList<>())));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         LocalDate dateFrom = LocalDate.parse("2020-11-16", formatter);
@@ -150,6 +162,11 @@ public class LessonRepositoryImplTest {
 
     @Test
     public void findLessonsByTeacherIdFromInterval() {
+        when(userRepository.findById("upa1221")).thenReturn(Optional.of(new User("upa1221", "235242",
+                "Teacher name", UserType.TEACHER, null)));
+
+        when(groupRepository.findById(1)).thenReturn(Optional.of(new Group(1, "First Group",
+                new User("vasya092", "2423", "Vasha", UserType.GROUP_HEAD, 1), new ArrayList<>())));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         LocalDate dateFrom = LocalDate.parse("2020-11-16", formatter);
@@ -192,6 +209,11 @@ public class LessonRepositoryImplTest {
 
     @Test
     public void findAll() {
+        when(userRepository.findById("upa1221")).thenReturn(Optional.of(new User("upa1221", "235242",
+                "Teacher name", UserType.TEACHER, null)));
+
+        when(groupRepository.findById(1)).thenReturn(Optional.of(new Group(1, "First Group",
+                new User("vasya092", "2423", "Vasha", UserType.GROUP_HEAD, 1), new ArrayList<>())));
         ArrayList<Lesson> lessons = (ArrayList<Lesson>) repository.findAll();
 
         Lesson lesson1 = lessons.get(0);
@@ -209,20 +231,6 @@ public class LessonRepositoryImplTest {
         assertTrue(lesson1.getIsPresent().get("dominar3000"));
         assertTrue(lesson1.getIsPresent().get("eeesya092"));
 
-        lesson1 = lessons.get(2);
-
-        assertEquals(Integer.valueOf(3), lesson1.getLessonId());
-        assertEquals("2020-11-16T09:05", lesson1.getDateTime().toString());
-        assertEquals("lab5", lesson1.getHomework());
-        assertEquals("OOP", lesson1.getDiscipline());
-        assertEquals(Integer.valueOf(2), lesson1.getGroup().getId());
-        assertNull(lesson1.getDescription());
-        assertEquals("directoria1", lesson1.getTeacher().getLogin());
-
-        assertTrue(lesson1.getIsPresent().get("sssya092"));
-        assertTrue(lesson1.getIsPresent().get("dominat00"));
-        assertTrue(lesson1.getIsPresent().get("va9rkw2"));
-        assertTrue(lesson1.getIsPresent().get("wireas34"));
 
     }
 
@@ -275,7 +283,7 @@ public class LessonRepositoryImplTest {
         isPresent.put("vasya092", false);
         isPresent.put("eeesya092", true);
 
-        Optional<Group> group = new GroupRepositoryImpl(connector).findById(1);
+        Optional<Group> group = new GroupRepositoryImpl(connector, new UserRepositoryImpl(connector)).findById(1);
         Optional<User> teacher = new UserRepositoryImpl(connector).findById("upa1221");
         if (group.isPresent() && teacher.isPresent()) {
             Lesson lesson = new Lesson(lessonId, dateTime, description, discipline, homework,

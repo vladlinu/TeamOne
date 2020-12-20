@@ -17,9 +17,13 @@ import java.util.*;
 
 public class LessonRepositoryImpl implements LessonRepository {
 	private final Connector connector;
+	private final UserRepository userRepository;
+	private final GroupRepository groupRepository;
 
-	public LessonRepositoryImpl(Connector connector) {
+	public LessonRepositoryImpl(Connector connector, UserRepository userRepository, GroupRepository groupRepository) {
 		this.connector = connector;
+		this.userRepository = userRepository;
+		this.groupRepository = groupRepository;
 	}
 
 	@Override
@@ -46,9 +50,6 @@ public class LessonRepositoryImpl implements LessonRepository {
 				String teacherLogin = lessonsSet.getString(8);
 
 				Map<String, Boolean> presentsForLesson = new HashMap<>();
-
-				GroupRepository groupRepository = new GroupRepositoryImpl(connector);
-				UserRepository userRepository = new UserRepositoryImpl(connector);
 
 				Optional<Group> group = groupRepository.findById(Integer.parseInt(groupId));
 				Optional<User> teacher = userRepository.findById(teacherLogin);
@@ -99,9 +100,6 @@ public class LessonRepositoryImpl implements LessonRepository {
 
 
 				Map<String, Boolean> presentsForLesson = new HashMap<>();
-
-				GroupRepository groupRepository = new GroupRepositoryImpl(connector);
-				UserRepository userRepository = new UserRepositoryImpl(connector);
 
 				Optional<Group> group = groupRepository.findById(groupId);
 				Optional<User> teacher = userRepository.findById(teacherLogin);
@@ -162,8 +160,8 @@ public class LessonRepositoryImpl implements LessonRepository {
 
 				Map<String, Boolean> presentsForLesson = new HashMap<>();
 
-				GroupRepository groupRepository = new GroupRepositoryImpl(connector);
 				UserRepository userRepository = new UserRepositoryImpl(connector);
+				GroupRepository groupRepository = new GroupRepositoryImpl(connector, userRepository);
 
 				Optional<Group> group = groupRepository.findById(groupId);
 				Optional<User> teacher = userRepository.findById(teacherLogin);
@@ -218,9 +216,6 @@ public class LessonRepositoryImpl implements LessonRepository {
 				String teacherLogin = lessonsSet.getString(8);
 
 				Map<String, Boolean> presentsForLesson = new HashMap<>();
-
-				GroupRepository groupRepository = new GroupRepositoryImpl(connector);
-				UserRepository userRepository = new UserRepositoryImpl(connector);
 
 				Optional<Group> group = groupRepository.findById(groupId);
 				Optional<User> teacher = userRepository.findById(teacherLogin);
