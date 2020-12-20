@@ -27,7 +27,6 @@ INSERT INTO Users(login, name, user_type,  password_salt, password_hash) VALUES(
 
 -- admins
 INSERT INTO Users(login, name, user_type, password_salt, password_hash) VALUES(‘julius44’, 'Julius Caesar', ‘admin’, ‘rome3000’, ‘ADAsdas!3!@!#asd’);
-INSERT INTO Users(login, name, user_type, password_salt, password_hash) VALUES(‘napoleon123’, 'Napoleon Bonaparte', ‘admin’, ‘lovefrance’, ‘123SA@q231’);
 
 
 
