@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -38,14 +39,21 @@ public class UserRepositoryImpl implements UserRepository {
 
 	@Override
 	public Optional<User> findById(String login) {
-		String statement = "SELECT * FROM Users WHERE login = '" + login + "')";
+		String statement = "SELECT * FROM Users WHERE login = '" + login + "'";
 		ResultSet result = connector.executeStatement(statement);
 		if (result != null) {
 			try {
-				String name = result.getString(1);
-				UserType userType = result.getObject(2, UserType.class);
+				result.next();
+				String name = result.getString(2);
+				String userTypeString = result.getString(4);
+				UserType userType = null;
+				for (Map.Entry entry : convertUserTypeForm.entrySet()) {
+					if (entry.getValue().equals(userTypeString)) {
+						userType = (UserType) entry.getKey();
+					}
+				}
 				Integer groupId = result.getInt(3);
-				String password = result.getString(4);
+				String password = result.getString(5);
 				User user = new User(login, password, name, userType, groupId);
 				return Optional.of(user);
 			} catch (SQLException e) {
@@ -64,11 +72,17 @@ public class UserRepositoryImpl implements UserRepository {
 		ArrayList<User> userList = new ArrayList<>();
 		try {
 			while (result.next()) {
-				String login = result.getString(0);
-				String name = result.getString(1);
-				UserType userType = result.getObject(2, UserType.class);
-				Integer groupId = result.getInt(3);
-				String password = result.getString(4);
+				String login = result.getString(1);
+				String name = result.getString(2);
+				String userTypeString = result.getString(3);
+				UserType userType = null;
+				for (Map.Entry entry : convertUserTypeForm.entrySet()) {
+					if (entry.getValue().equals(userTypeString)) {
+						userType = (UserType) entry.getKey();
+					}
+				}
+				Integer groupId = result.getInt(4);
+				String password = result.getString(5);
 				User user = new User(login, password, name, userType, groupId);
 				userList.add(user);
 			}
