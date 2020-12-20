@@ -130,7 +130,7 @@ public class LessonRepositoryImpl implements LessonRepository {
 		String statement = "INSERT INTO Lessons VALUES('" + entity.getLessonId() +
 				"', '" + entity.getDateTime() + "', '" + entity.getDescription() +
 				"', '" + entity.getHomework() + "', '" + entity.getDiscipline() +
-				"', '" + entity.getTeacher() + "', '" + entity.getGroup() + "')";
+				"', '" + entity.getTeacher().getLogin() + "', '" + entity.getGroup().getId() + "')";
 		ResultSet result = connector.executeStatement(statement);
 		try {
 			Integer id = result.getInt(0);
@@ -159,9 +159,6 @@ public class LessonRepositoryImpl implements LessonRepository {
 				String teacherLogin = lessonsSet.getString(7);
 
 				Map<String, Boolean> presentsForLesson = new HashMap<>();
-
-				UserRepository userRepository = new UserRepositoryImpl(connector);
-				GroupRepository groupRepository = new GroupRepositoryImpl(connector, userRepository);
 
 				Optional<Group> group = groupRepository.findById(groupId);
 				Optional<User> teacher = userRepository.findById(teacherLogin);
@@ -302,10 +299,10 @@ public class LessonRepositoryImpl implements LessonRepository {
 
 		ResultSet lesson = connector.executeStatement(existsLessonCommand);
 
-        try {
-        	return lesson.next();
+		try {
+			return lesson.next();
 		} catch (SQLException ex) {
-        	return false;
+			return false;
 		}
 	}
 }
