@@ -22,7 +22,7 @@ public class Lesson {
     private final Map<String, Boolean> isPresent;
 
     public boolean isLessonTeacher(User user) {
-        return user.isTeacher();
+        return user.isTeacher() && user.equals(teacher);
     }
 
     public boolean removePresent(String studentLogin) {

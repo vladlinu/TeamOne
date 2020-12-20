@@ -15,6 +15,6 @@ public class Group {
     private List<User> members;
 
     public boolean isGrouphead(User user) {
-        return user.isGrouphead();
+        return user.isGrouphead() && user.equals(groupHead);
     }
 }
