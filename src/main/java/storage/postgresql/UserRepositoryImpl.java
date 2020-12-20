@@ -35,29 +35,19 @@ public class UserRepositoryImpl implements UserRepository {
 		ResultSet result = connector.executeStatement(statement);
 		if (result != null) {
 			try {
-				if (result.next()) {
-					String name = result.getString(2);
-					String userType = result.getString(4);
-					UserType type = null;
-					switch (userType) {
-						case ("student"):
-							type = UserType.STUDENT;
-							break;
-						case ("group_head"):
-							type = UserType.GROUP_HEAD;
-							break;
-						case ("teacher"):
-							type = UserType.TEACHER;
-							break;
-						case ("admin"):
-							type = UserType.ADMIN;
-							break;
+				result.next();
+				String name = result.getString(2);
+				String userTypeString = result.getString(4);
+				UserType userType = null;
+				for (Map.Entry entry : convertUserTypeForm.entrySet()) {
+					if (entry.getValue().equals(userTypeString)) {
+						userType = (UserType) entry.getKey();
 					}
-					Integer groupId = result.getInt(3);
-					String password = result.getString(6);
-					User user = new User(login, password, name, type, groupId);
-					return Optional.of(user);
 				}
+				Integer groupId = result.getInt(3);
+				String password = result.getString(5);
+				User user = new User(login, password, name, userType, groupId);
+				return Optional.of(user);
 			} catch (SQLException e) {
 				return Optional.empty();
 			}
