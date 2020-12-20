@@ -67,25 +67,16 @@ public class UserRepositoryImpl implements UserRepository {
 			while (result.next()) {
 				String login = result.getString(1);
 				String name = result.getString(2);
-				String userType = result.getString(4);
-				UserType type = null;
-				switch (userType) {
-					case ("student") :
-						type = UserType.STUDENT;
-						break;
-					case ("group_head") :
-						type = UserType.GROUP_HEAD;
-						break;
-					case ("teacher") :
-						type = UserType.TEACHER;
-						break;
-					case ("admin") :
-						type = UserType.ADMIN;
-						break;
+				String userTypeString = result.getString(3);
+				UserType userType = null;
+				for (Map.Entry entry : convertUserTypeForm.entrySet()) {
+					if (entry.getValue().equals(userTypeString)) {
+						userType = (UserType) entry.getKey();
+					}
 				}
-				Integer groupId = result.getInt(3);
-				String password = result.getString(6);
-				User user = new User(login, password, name, type, groupId);
+				Integer groupId = result.getInt(4);
+				String password = result.getString(5);
+				User user = new User(login, password, name, userType, groupId);
 				userList.add(user);
 			}
 			return userList;
