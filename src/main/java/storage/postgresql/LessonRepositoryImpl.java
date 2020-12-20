@@ -160,9 +160,6 @@ public class LessonRepositoryImpl implements LessonRepository {
 
 				Map<String, Boolean> presentsForLesson = new HashMap<>();
 
-				UserRepository userRepository = new UserRepositoryImpl(connector);
-				GroupRepository groupRepository = new GroupRepositoryImpl(connector, userRepository);
-
 				Optional<Group> group = groupRepository.findById(groupId);
 				Optional<User> teacher = userRepository.findById(teacherLogin);
 
