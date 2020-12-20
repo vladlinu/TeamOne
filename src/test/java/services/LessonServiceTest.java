@@ -32,7 +32,7 @@ public class LessonServiceTest {
     public void setUp() {
         mockedLessonRepo = mock(LessonRepository.class);
         mockedGroupRepo = mock(GroupRepository.class);
-        student = new User("max", "1234", "Maxim Perevalov", UserType.STUDENT, 0);
+        student = new User("max", "1234", "Maxim Perevalov", UserType.GROUP_HEAD, 0);
         group = new Group(1, "IP-94", student, List.of(
                 new User("vania", "1234", "Vania", UserType.STUDENT, 0),
                 new User("oleg", "1234", "Oleg", UserType.STUDENT, 0),
@@ -72,7 +72,7 @@ public class LessonServiceTest {
     @Test
     public void saveLesson() throws PermissionException {
         User caller = admin;
-        when(mockedGroupRepo.findById(lesson.getLessonId())).thenReturn(Optional.of(group));
+        when(mockedGroupRepo.findById(lesson.getGroup().getId())).thenReturn(Optional.of(group));
         service.saveLesson(caller, lesson);
         verify(mockedLessonRepo, times(1)).saveNewEntity(lesson);
     }
