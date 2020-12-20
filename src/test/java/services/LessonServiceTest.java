@@ -32,12 +32,16 @@ public class LessonServiceTest {
     public void setUp() {
         mockedLessonRepo = mock(LessonRepository.class);
         mockedGroupRepo = mock(GroupRepository.class);
+        student = new User("max", "1234", "Maxim Perevalov", UserType.STUDENT, group);
+        group = new Group(1, "IP-94", student, List.of(
+                new User("vania", "1234", "Vania", UserType.STUDENT, group),
+                new User("oleg", "1234", "Oleg", UserType.STUDENT, group),
+                new User("vladimir", "1234", "Vladimir", UserType.STUDENT, group)
+        ));
         service = new LessonService(mockedLessonRepo, mockedGroupRepo);
-        student = new User("max", "1234", "Maxim Perevalov", UserType.GROUP_HEAD, 0);
-        admin = new User("vova", "1234", "Vova Pomidor", UserType.ADMIN, 0);
-        group = new Group(1, "IP-94", "max", List.of("Vania", "Oleg", "Vladimir"));
-        teacher = new User("Olesnadr", "1234", "Саша", UserType.TEACHER, 0);
-        lesson = new Lesson(0, LocalDateTime.now(), "Good lesson", "English", "do nothing", 0, teacher.getLogin(), new HashMap<>(Map.of("max", true)));
+        admin = new User("vova", "1234", "Vova Pomidor", UserType.ADMIN, null);
+        teacher = new User("Olesnadr", "1234", "Саша", UserType.TEACHER, null);
+        lesson = new Lesson(0, LocalDateTime.now(), "Good lesson", "English", "do nothing", group, teacher, new HashMap<>(Map.of("max", true)));
     }
 
     @Test(expected = EntityNotExistException.class)
@@ -51,7 +55,7 @@ public class LessonServiceTest {
     public void setLessonHomework() throws PermissionException {
         User caller = student;
         when(mockedLessonRepo.findById(lesson.getLessonId())).thenReturn(Optional.of(lesson));
-        when(mockedGroupRepo.findById(lesson.getGroupId())).thenReturn(Optional.of(group));
+        when(mockedGroupRepo.findById(lesson.getGroup().getId())).thenReturn(Optional.of(group));
         String homework = "make presentation";
         service.setLessonHomework(caller, 0, homework);
         verify(mockedLessonRepo, times(1)).update(lesson);
@@ -119,7 +123,7 @@ public class LessonServiceTest {
     @Test
     public void removeStudentPresence() throws PermissionException {
         User caller = admin;
-        when(mockedGroupRepo.findById(lesson.getGroupId())).thenReturn(Optional.of(group));
+        when(mockedGroupRepo.findById(lesson.getGroup().getId())).thenReturn(Optional.of(group));
         when(mockedLessonRepo.findById(lesson.getLessonId())).thenReturn(Optional.of(lesson));
         service.removeStudentPresence(caller, lesson.getLessonId(), student.getLogin());
         assertEquals(Collections.emptySet(), lesson.getPresentStudentLogins());
@@ -130,7 +134,7 @@ public class LessonServiceTest {
     public void addStudentPresence() throws PermissionException {
         User caller = admin;
         lesson.removePresent(student.getLogin());
-        when(mockedGroupRepo.findById(lesson.getGroupId())).thenReturn(Optional.of(group));
+        when(mockedGroupRepo.findById(lesson.getGroup().getId())).thenReturn(Optional.of(group));
         when(mockedLessonRepo.findById(lesson.getLessonId())).thenReturn(Optional.of(lesson));
         service.addStudentPresence(caller, lesson.getLessonId(), student.getLogin());
         assertEquals(Set.of(student.getLogin()), lesson.getPresentStudentLogins());
@@ -141,7 +145,7 @@ public class LessonServiceTest {
     public void getPresence() {
         User caller = admin;
         lesson.removePresent(student.getLogin());
-        when(mockedGroupRepo.findById(lesson.getGroupId())).thenReturn(Optional.of(group));
+        when(mockedGroupRepo.findById(lesson.getGroup().getId())).thenReturn(Optional.of(group));
         when(mockedLessonRepo.findById(lesson.getLessonId())).thenReturn(Optional.of(lesson));
         Set<String> presence = service.getPresence(caller, lesson.getLessonId());
         assertEquals(lesson.getPresentStudentLogins(), presence);

@@ -17,7 +17,7 @@ public class GroupRepositoryImpl implements GroupRepository {
     @Override
     public Group saveNewEntity(Group entity) {
         String name = entity.getName();
-        String groupheadLogin = entity.getGroupHeadLogin();
+        String groupheadLogin = entity.getGroupHead();
         String statement = "INSERT INTO Groups(name, grouphead_login) " +
                 "VALUES('" + name + "', '" + groupheadLogin + "') RETURNING id";
         ResultSet result = connector.executeStatement(statement);
@@ -36,27 +36,29 @@ public class GroupRepositoryImpl implements GroupRepository {
     public Optional<Group> findById(Integer id) {
         String statement = "SELECT * FROM Groups WHERE id = " + id;
         ResultSet result = connector.executeStatement(statement);
-        if (result == null) {
-            return Optional.empty();
-        } else {
+        if (result != null) {
             try {
                 while (result.next()) {
                     String name = result.getString("name");
-                    String groupHeadLogin = result.getString("grouphead_login");
-                    String getLoginsStatement = "SELECT login FROM Users WHERE group_id = " + id +
-                            " AND (user_type = 'student' OR user_type = 'group_head')";
-                    ResultSet resultLogins = connector.executeStatement(getLoginsStatement);
-                    ArrayList<String> memberLogins = new ArrayList<>();
-                    while(resultLogins.next()) {
-                        memberLogins.add(resultLogins.getString(1));
-                    }
-                    return Optional.of(new Group(id, name, groupHeadLogin, memberLogins));
+                    return getGroup(id, result, name);
                 }
             } catch (SQLException e) {
                 return Optional.empty();
             }
-            return Optional.empty();
         }
+        return Optional.empty();
+    }
+
+    private Optional<Group> getGroup(Integer id, ResultSet result, String name) throws SQLException {
+        String groupHeadLogin = result.getString("grouphead_login");
+        String getLoginsStatement = "SELECT login FROM Users WHERE group_id = " + id +
+                " AND (user_type = 'student' OR user_type = 'group_head')";
+        ResultSet resultLogins = connector.executeStatement(getLoginsStatement);
+        ArrayList<String> memberLogins = new ArrayList<>();
+        while (resultLogins.next()) {
+            memberLogins.add(resultLogins.getString(1));
+        }
+        return Optional.of(new Group(id, name, groupHeadLogin, memberLogins));
     }
 
     @Override
@@ -98,7 +100,7 @@ public class GroupRepositoryImpl implements GroupRepository {
     @Override
     public void update(Group entity) {
         String statement = "UPDATE Groups SET " + "(name, grouphead_login) = " +
-                "('" + entity.getName() + "', '" + entity.getGroupHeadLogin()+"') " +
+                "('" + entity.getName() + "', '" + entity.getGroupHead()+"') " +
                 "WHERE id = " + entity.getId();
         connector.executeStatement(statement);
     }
@@ -125,15 +127,7 @@ public class GroupRepositoryImpl implements GroupRepository {
             try {
                 while (result.next()) {
                     Integer id = (int) result.getLong("id");
-                    String groupHeadLogin = result.getString("grouphead_login");
-                    String getLoginsStatement = "SELECT login FROM Users WHERE group_id = " + id +
-                            " AND (user_type = 'student' OR user_type = 'group_head')";
-                    ResultSet resultLogins = connector.executeStatement(getLoginsStatement);
-                    ArrayList<String> memberLogins = new ArrayList<>();
-                    while(resultLogins.next()) {
-                        memberLogins.add(resultLogins.getString(1));
-                    }
-                    return Optional.of(new Group(id, name, groupHeadLogin, memberLogins));
+                    return getGroup(id, result, name);
                 }
             } catch (SQLException e) {
                 return Optional.empty();

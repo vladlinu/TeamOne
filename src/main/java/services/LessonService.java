@@ -26,8 +26,8 @@ public class LessonService {
     void setLessonHomework(User caller, Integer lessonId, String homework) throws PermissionException {
         Lesson lesson = lessonRepository.findById(lessonId)
                 .orElseThrow(() -> lessonIsNotExist(lessonId));
-        Group group = groupRepository.findById(lesson.getGroupId())
-                .orElseThrow(() -> groupIsNotExist(lesson.getGroupId()));
+        Group group = groupRepository.findById(lesson.getGroup().getId())
+                .orElseThrow(() -> groupIsNotExist(lesson.getGroup()));
 
         if (!isTeacherOrAdminOrGrouphead(caller, group, lesson)) {
             throw notEnoughPermission(caller.getLogin());
@@ -38,8 +38,8 @@ public class LessonService {
     }
 
     void saveLesson(User caller, Lesson lesson) throws PermissionException {
-        Group group = groupRepository.findById(lesson.getGroupId())
-                .orElseThrow(() -> groupIsNotExist(lesson.getGroupId()));
+        Group group = groupRepository.findById(lesson.getGroup().getId())
+                .orElseThrow(() -> groupIsNotExist(lesson.getGroup()));
 
         if (!(isTeacherOrAdminOrGrouphead(caller, group, lesson))) {
             throw notEnoughPermission(caller.getLogin());
@@ -96,8 +96,8 @@ public class LessonService {
     private Lesson getLessonToEditPresence(User caller, Integer lessonId) throws PermissionException {
         Lesson lesson = lessonRepository.findById(lessonId)
                 .orElseThrow(() -> lessonIsNotExist(lessonId));
-        Group group = groupRepository.findById(lesson.getGroupId())
-                .orElseThrow(() -> groupIsNotExist(lesson.getGroupId()));
+        Group group = groupRepository.findById(lesson.getGroup().getId())
+                .orElseThrow(() -> groupIsNotExist(lesson.getGroup()));
         if (!isTeacherOrAdminOrGrouphead(caller, group, lesson)) {
             throw notEnoughPermission(caller.getLogin());
         }
