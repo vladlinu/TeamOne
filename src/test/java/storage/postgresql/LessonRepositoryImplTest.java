@@ -1,6 +1,9 @@
 package storage.postgresql;
 
+import domain.Group;
 import domain.Lesson;
+import domain.User;
+import domain.UserType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -120,9 +123,9 @@ public class LessonRepositoryImplTest {
         assertEquals("2020-11-16T08:30", lesson1.getDateTime().toString());
         assertNull(lesson1.getHomework());
         assertEquals("Mathematics", lesson1.getDiscipline());
-        assertEquals(Integer.valueOf(1), lesson1.getGroup());
+        assertEquals(Integer.valueOf(1), lesson1.getGroup().getId());
         assertNull(lesson1.getDescription());
-        assertEquals("upa1221", lesson1.getTeacher());
+        assertEquals("upa1221", lesson1.getTeacher().getLogin());
 
         assertTrue(lesson1.getIsPresent().get("vasya092"));
         assertTrue(lesson1.getIsPresent().get("wqa092"));
@@ -135,9 +138,9 @@ public class LessonRepositoryImplTest {
         assertEquals("2020-11-16T08:05", lesson1.getDateTime().toString());
         assertNull(lesson1.getHomework());
         assertEquals("Databases", lesson1.getDiscipline());
-        assertEquals(Integer.valueOf(1), lesson1.getGroup());
+        assertEquals(Integer.valueOf(1), lesson1.getGroup().getId());
         assertNull(lesson1.getDescription());
-        assertEquals("upa1221", lesson1.getTeacher());
+        assertEquals("upa1221", lesson1.getTeacher().getLogin());
 
         assertTrue(lesson1.getIsPresent().get("vasya092"));
         assertTrue(lesson1.getIsPresent().get("wqa092"));
@@ -160,9 +163,9 @@ public class LessonRepositoryImplTest {
         assertEquals("2020-11-16T08:30", lesson1.getDateTime().toString());
         assertNull(lesson1.getHomework());
         assertEquals("Mathematics", lesson1.getDiscipline());
-        assertEquals(Integer.valueOf(1), lesson1.getGroup());
+        assertEquals(Integer.valueOf(1), lesson1.getGroup().getId());
         assertNull(lesson1.getDescription());
-        assertEquals("upa1221", lesson1.getTeacher());
+        assertEquals("upa1221", lesson1.getTeacher().getLogin());
 
         assertTrue(lesson1.getIsPresent().get("vasya092"));
         assertTrue(lesson1.getIsPresent().get("wqa092"));
@@ -175,9 +178,9 @@ public class LessonRepositoryImplTest {
         assertEquals("2020-11-16T08:05", lesson1.getDateTime().toString());
         assertNull(lesson1.getHomework());
         assertEquals("Databases", lesson1.getDiscipline());
-        assertEquals(Integer.valueOf(1), lesson1.getGroup());
+        assertEquals(Integer.valueOf(1), lesson1.getGroup().getId());
         assertNull(lesson1.getDescription());
-        assertEquals("upa1221", lesson1.getTeacher());
+        assertEquals("upa1221", lesson1.getTeacher().getLogin());
 
         assertTrue(lesson1.getIsPresent().get("vasya092"));
         assertTrue(lesson1.getIsPresent().get("wqa092"));
@@ -186,53 +189,6 @@ public class LessonRepositoryImplTest {
     }
 
 
-    @Test
-    void saveNewEntity() {
-        Lesson lesson1 = new Lesson(
-                11111, LocalDateTime.now(),
-                "description1",
-                "Math1",
-                null, 1,
-                "julius44",
-                new HashMap<>()
-        );
-        Lesson lesson2 = new Lesson(
-                55555,
-                LocalDateTime.now(),
-                "description2",
-                "Math2",
-                null,
-                2,
-                "julius44",
-                new HashMap<>()
-        );
-        Lesson lesson3 = new Lesson(
-                11111,
-                LocalDateTime.now(),
-                "description3",
-                "Math3",
-                "Lab 6",
-                3,
-                "julius44",
-                new HashMap<>()
-        );
-        Lesson saveNewLesson1 = repository.saveNewEntity(lesson1);
-        Lesson saveNewLesson2 = repository.saveNewEntity(lesson2);
-        Lesson saveNewLesson3 = repository.saveNewEntity(lesson3);
-
-        Assert.assertEquals(saveNewLesson1, lesson1);
-        Assert.assertEquals(saveNewLesson2, lesson2);
-        assertNull(saveNewLesson3);
-    }
-
-    @Test
-    void findById() {
-        Optional<Lesson> lesson1 = repository.findById(1);
-        assertTrue(lesson1.isPresent());
-
-        Optional<Lesson> lesson2 = repository.findById(5);
-        assertTrue(lesson2.isPresent());
-    }
 
     @Test
     public void findAll() {
@@ -244,9 +200,9 @@ public class LessonRepositoryImplTest {
         assertEquals("2020-11-16T08:30", lesson1.getDateTime().toString());
         assertNull(lesson1.getHomework());
         assertEquals("Mathematics", lesson1.getDiscipline());
-        assertEquals(Integer.valueOf(1), lesson1.getGroup());
+        assertEquals(Integer.valueOf(1), lesson1.getGroup().getId());
         assertNull(lesson1.getDescription());
-        assertEquals("upa1221", lesson1.getTeacher());
+        assertEquals("upa1221", lesson1.getTeacher().getLogin());
 
         assertTrue(lesson1.getIsPresent().get("vasya092"));
         assertTrue(lesson1.getIsPresent().get("wqa092"));
@@ -259,9 +215,9 @@ public class LessonRepositoryImplTest {
         assertEquals("2020-11-16T09:05", lesson1.getDateTime().toString());
         assertEquals("lab5", lesson1.getHomework());
         assertEquals("OOP", lesson1.getDiscipline());
-        assertEquals(Integer.valueOf(2), lesson1.getGroup());
+        assertEquals(Integer.valueOf(2), lesson1.getGroup().getId());
         assertNull(lesson1.getDescription());
-        assertEquals("directoria1", lesson1.getTeacher());
+        assertEquals("directoria1", lesson1.getTeacher().getLogin());
 
         assertTrue(lesson1.getIsPresent().get("sssya092"));
         assertTrue(lesson1.getIsPresent().get("dominat00"));
@@ -319,44 +275,47 @@ public class LessonRepositoryImplTest {
         isPresent.put("vasya092", false);
         isPresent.put("eeesya092", true);
 
-        Lesson lesson = new Lesson(lessonId, dateTime, description, discipline, homework,
-                groupId, teacherLogin, isPresent);
+        Optional<Group> group = new GroupRepositoryImpl(connector).findById(1);
+        Optional<User> teacher = new UserRepositoryImpl(connector).findById("upa1221");
+        if (group.isPresent() && teacher.isPresent()) {
+            Lesson lesson = new Lesson(lessonId, dateTime, description, discipline, homework,
+                    group.get(), teacher.get(), isPresent);
 
-        repository.update(lesson);
+            repository.update(lesson);
 
-        ResultSet resultSet = connector.executeStatement(String.format("SELECT * FROM Lessons WHERE id = %s", lessonId));
+            ResultSet resultSet = connector.executeStatement(String.format("SELECT * FROM Lessons WHERE id = %s", lessonId));
 
-        try {
-            while (resultSet.next()) {
-                Integer idResult = resultSet.getInt(1);
-                String dateResult = resultSet.getDate(2).toString();
-                String timeResult = resultSet.getTime(3).toString();
-                String descriptionResult = resultSet.getString(7);
-                String disciplineResult = resultSet.getString(5);
-                String homeworkResult = resultSet.getString(4);
-                Integer groupIdResult = resultSet.getInt(6);
-                String teacherLoginResult = resultSet.getString(8);
+            try {
+                while (resultSet.next()) {
+                    Integer idResult = resultSet.getInt(1);
+                    String dateResult = resultSet.getDate(2).toString();
+                    String timeResult = resultSet.getTime(3).toString();
+                    String descriptionResult = resultSet.getString(7);
+                    String disciplineResult = resultSet.getString(5);
+                    String homeworkResult = resultSet.getString(4);
+                    Integer groupIdResult = resultSet.getInt(6);
+                    String teacherLoginResult = resultSet.getString(8);
 
-                assertEquals(idResult, lessonId);
-                assertEquals(dateResult, date);
-                assertEquals(timeResult, time);
-                assertEquals(descriptionResult, description);
-                assertEquals(disciplineResult, discipline);
-                assertEquals(homeworkResult, homework);
-                assertEquals(groupIdResult, groupId);
-                assertEquals(teacherLoginResult, teacherLogin);
+                    assertEquals(idResult, lessonId);
+                    assertEquals(dateResult, date);
+                    assertEquals(timeResult, time);
+                    assertEquals(descriptionResult, description);
+                    assertEquals(disciplineResult, discipline);
+                    assertEquals(homeworkResult, homework);
+                    assertEquals(groupIdResult, groupId);
+                    assertEquals(teacherLoginResult, teacherLogin);
 
-                ResultSet presentsResult1 = connector.executeStatement("SELECT * FROM Presents WHERE login = 'dominar3000' AND lesson_id = 1");
-                assertTrue(presentsResult1.next());
+                    ResultSet presentsResult1 = connector.executeStatement("SELECT * FROM Presents WHERE login = 'dominar3000' AND lesson_id = 1");
+                    assertTrue(presentsResult1.next());
 
-                ResultSet presentsResult2 = connector.executeStatement("SELECT * FROM Presents WHERE login = 'wqa092' AND lesson_id = 1");
-                assertFalse(presentsResult2.next());
+                    ResultSet presentsResult2 = connector.executeStatement("SELECT * FROM Presents WHERE login = 'wqa092' AND lesson_id = 1");
+                    assertFalse(presentsResult2.next());
 
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
             }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
         }
-
     }
 
     @Test
