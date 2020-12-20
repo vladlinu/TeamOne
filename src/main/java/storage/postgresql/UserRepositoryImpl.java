@@ -24,7 +24,7 @@ public class UserRepositoryImpl implements UserRepository {
 	public User saveNewEntity(User entity) {
 		String statement = "INSERT INTO Users VALUES('" + entity.getLogin() +
 				"', '" + entity.getName() + "', '" + entity.getUserType() +
-				"', '" + entity.getGroupId() + "', '" + entity.getPassword() + "')";
+				"', '" + entity.getGroup() + "', '" + entity.getPassword() + "')";
 		connector.executeStatement(statement);
 		ResultSet result = connector.executeStatement(statement);
 		try {
@@ -88,7 +88,7 @@ public class UserRepositoryImpl implements UserRepository {
 	public void update(User entity) {
 		String newUserType = convertUserTypeForm.get(entity.getUserType());
 		String statement = "UPDATE Users SET " + "(name, group_id, user_type, password_salt, password_hash) = " +
-				"('" + entity.getName() + "', " + entity.getGroupId() + ", '" + newUserType +
+				"('" + entity.getName() + "', " + entity.getGroup() + ", '" + newUserType +
 				"', '" + entity.getPassword() + "', '" + entity.getPassword() + "') " +
 				"WHERE login = '" + entity.getLogin() + "'";
 		connector.executeStatement(statement);

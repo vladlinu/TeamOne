@@ -55,7 +55,7 @@ public class GroupService {
         return groupRepository.findGroupByName(groupName);
     }
 
-    public List<String> getGroupMembers(Integer id) {
-        return groupRepository.findById(id).orElseThrow(() -> groupIsNotExist(id)).getMemberLogins();
+    public List<User> getGroupMembers(Integer id) {
+        return groupRepository.findById(id).orElseThrow(() -> groupIsNotExist(id)).getMembers();
     }
 }
